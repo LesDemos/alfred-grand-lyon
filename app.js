@@ -8,5 +8,5 @@ app.listen(port, function() {
 
 app.get('/', function(req, res) {
   console.log('Received request on /');
-  res.sendStatus(200);
+  res.status(200).send('Hello Alfred!');
 });
