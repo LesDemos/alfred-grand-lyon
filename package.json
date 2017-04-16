@@ -3,7 +3,9 @@
   "version": "0.0.1",
   "description": "Grand Lyon bot",
   "author": "LesDemos",
-  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/LesDemos/alfred-grand-lyon"
