@@ -1,0 +1,21 @@
+{
+  "name": "alfred-grand-lyon",
+  "version": "0.0.1",
+  "description": "Grand Lyon bot",
+  "author": "LesDemos",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/LesDemos/alfred-grand-lyon"
+  },
+  "bugs": {
+    "url": "https://github.com/LesDemos/alfred-grand-lyon/issues"
+  },
+  "homepage": "https://github.com/LesDemos/alfred-grand-lyon#readme",
+  "dependencies": {
+    "express": "^4.12.3"
+  },
+  "license": "MIT"
+}
