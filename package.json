@@ -15,7 +15,9 @@
   },
   "homepage": "https://github.com/LesDemos/alfred-grand-lyon#readme",
   "dependencies": {
-    "express": "^4.12.3"
+    "body-parser": "^1.17.1",
+    "express": "^4.12.3",
+    "messenger-bot": "^2.2.0"
   },
   "license": "MIT"
 }
