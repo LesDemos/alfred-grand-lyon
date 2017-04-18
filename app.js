@@ -2,16 +2,18 @@
 const express = require('express');
 const Bot = require('messenger-bot');
 const bodyParser = require('body-parser');
-const port = process.env.PORT || 5000;
-const FB_TOKEN = process.env.FB_TOKEN || "EAAUg9WBYPGoBAPZA5ieHDd94OKp55MqZBHEYOyYi3iZCZCRqtcho5XZCZACmzVxm4ZBmKLGEQyMKhyOLknWcA5pwpU4SeZC2afsEmbgfYAOG5PtBRXAGL6ZAPYhGGi7iMVxYF3xDR0s1TFXKyzisKEPcZB8WkuXftErieZBsXR4qcbOjQZDZD";
-const FB_VERIFY = process.env.FB_VERIFY || "alfred-grand-lyon";
+const port = process.env.PORT;
+const FB_TOKEN = process.env.FB_TOKEN;
+const FB_VERIFY = process.env.FB_VERIFY;
+const FB_APP_SECRET = process.env.FB_APP_SECRET;
 
 let app = express();
 let client = require('./connection.js');
 
 let bot = new Bot({
   token: FB_TOKEN,
-  verify: FB_VERIFY
+  verify: FB_VERIFY,
+  app_secret: FB_APP_SECRET
 });
 
 bot.on('error', (err) => {
