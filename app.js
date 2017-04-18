@@ -7,6 +7,7 @@ const FB_TOKEN = process.env.FB_TOKEN || "EAAUg9WBYPGoBAPZA5ieHDd94OKp55MqZBHEYO
 const FB_VERIFY = process.env.FB_VERIFY || "alfred-grand-lyon";
 
 let app = express();
+let client = require('./connection.js');
 
 let bot = new Bot({
   token: FB_TOKEN,
@@ -40,17 +41,38 @@ app.listen(port, function() {
   console.log('Listening on port ' + port);
 });
 
+app.get('/', function(req, res) {
+  console.log('Received request on /');
+  res.status(200).send('Hello Alfred!');
+});
+
 app.get('/bot/fb', (req, res) => {
   return bot._verify(req, res);
 });
 
 app.post('/bot/fb', (req, res) => {
   bot._handleMessage(req.body);
-  res.end(JSON.stringify({status: 'ok'}));
+res.end(JSON.stringify({status: 'ok'}));
 });
 
-app.get('/', function(req, res) {
-  console.log('Received request on /');
-  res.status(200).send('Hello Alfred!');
+app.get('/es/init', (req, res) => {
+  let name = (req.param('name') || "koala");
+  client.index({
+    index: 'request',
+    type: 'facebook',
+    body: {
+      "ConstituencyName": name,
+      "ConstituencyID": "E14000761",
+      "ConstituencyType": "Borough",
+      "Electorate": 74499,
+      "ValidVotes": 48694,
+    }
+  },function(err,resp,status) {
+    console.log(resp);
+    if(!err){
+      res.status(200).send(name + "added");
+    }
+  });
+
 });
 
