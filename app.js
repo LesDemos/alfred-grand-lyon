@@ -5,12 +5,14 @@ const bodyParser = require('body-parser');
 const port = process.env.PORT;
 const FB_TOKEN = process.env.FB_TOKEN;
 const FB_VERIFY = process.env.FB_VERIFY;
+const FB_APP_SECRET = process.env.FB_APP_SECRET;
 
 let app = express();
 
 let bot = new Bot({
   token: FB_TOKEN,
-  verify: FB_VERIFY
+  verify: FB_VERIFY,
+  app_secret: FB_APP_SECRET
 });
 
 bot.on('error', (err) => {
