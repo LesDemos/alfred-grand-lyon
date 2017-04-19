@@ -1,20 +1,28 @@
 "use strict"
+// Node modules
 const express = require('express');
 const Bot = require('messenger-bot');
 const bodyParser = require('body-parser');
+const mongodb = require('mongodb');
+
+// Included files
+let client = require('./connection.js');
+
+// Environment variables
 const port = process.env.PORT;
 const FB_TOKEN = process.env.FB_TOKEN;
 const FB_VERIFY = process.env.FB_VERIFY;
 const FB_APP_SECRET = process.env.FB_APP_SECRET;
+const MONGODB_URI = process.env.MONGODB_URI;
 
+// Global variables
 let app = express();
-let client = require('./connection.js');
-
 let bot = new Bot({
   token: FB_TOKEN,
   verify: FB_VERIFY,
   app_secret: FB_APP_SECRET
 });
+let chatbotdb;
 
 bot.on('error', (err) => {
   console.log(err.message);
@@ -22,15 +30,25 @@ bot.on('error', (err) => {
 
 bot.on('message', (payload, reply) => {
   let text = payload.message.text;
-  reply({
-    text
-  }, (err) => {
-  if (err) {
-    console.log(err.message);
-  }
+  let senderid = payload.sender.id;
 
-  console.log(`Echoed back : ${text}`);
-});
+  var reportsCollection = chatbotdb.collection('reports');
+  var report = {
+    fb_id: senderid,
+    text: text
+  };
+  reportsCollection.insertOne(report, function(err, res) {});
+
+  reply({
+      text
+    }, (err) => {
+      if (err) {
+        console.log(err.message);
+      }
+
+      console.log(`Echoed back : ${text}`);
+    }
+  );
 });
 
 app.use(bodyParser.json());
@@ -41,6 +59,14 @@ app.use(bodyParser.urlencoded({
 
 app.listen(port, function() {
   console.log('Listening on port ' + port);
+
+  mongodb.MongoClient.connect(MONGODB_URI, function(err, db) {
+    if (err) {
+      throw err;
+    }
+
+    chatbotdb = db;
+  });
 });
 
 app.get('/', function(req, res) {
@@ -54,7 +80,7 @@ app.get('/bot/fb', (req, res) => {
 
 app.post('/bot/fb', (req, res) => {
   bot._handleMessage(req.body);
-res.end(JSON.stringify({status: 'ok'}));
+  res.end(JSON.stringify({status: 'ok'}));
 });
 
 app.get('/es/init', (req, res) => {
