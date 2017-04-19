@@ -19,7 +19,7 @@
     "elasticsearch": "^13.0.0-rc2",
     "express": "^4.12.3",
     "messenger-bot": "^2.2.0",
-    "mongodb": "^2.2.26"
+    "mongojs": "^2.4.0"
   },
   "license": "MIT"
 }

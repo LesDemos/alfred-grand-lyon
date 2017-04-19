@@ -1,15 +1,7 @@
 "use strict"
 const MONGODB_URI = process.env.MONGODB_URI;
-const mongodb = require('mongodb');
+const mongojs = require('mongojs');
 
-var chatbotdb;
-
-mongodb.MongoClient.connect(MONGODB_URI, function(err, db) {
-  if (err) {
-    throw err;
-  }
-  
-  chatbotdb = db;
-});
+var chatbotdb = mongojs(MONGODB_URI);
 
 module.exports = chatbotdb;
