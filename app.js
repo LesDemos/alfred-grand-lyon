@@ -3,17 +3,16 @@
 const express = require('express');
 const Bot = require('messenger-bot');
 const bodyParser = require('body-parser');
-const mongodb = require('mongodb');
 
 // Included files
 let client = require('./connection.js');
+let chatbotdb = require('./chatbotdb.js');
 
 // Environment variables
 const port = process.env.PORT;
 const FB_TOKEN = process.env.FB_TOKEN;
 const FB_VERIFY = process.env.FB_VERIFY;
 const FB_APP_SECRET = process.env.FB_APP_SECRET;
-const MONGODB_URI = process.env.MONGODB_URI;
 
 // Global variables
 let app = express();
@@ -22,7 +21,6 @@ let bot = new Bot({
   verify: FB_VERIFY,
   app_secret: FB_APP_SECRET
 });
-let chatbotdb;
 
 bot.on('error', (err) => {
   console.log(err.message);
@@ -59,14 +57,6 @@ app.use(bodyParser.urlencoded({
 
 app.listen(port, function() {
   console.log('Listening on port ' + port);
-
-  mongodb.MongoClient.connect(MONGODB_URI, function(err, db) {
-    if (err) {
-      throw err;
-    }
-
-    chatbotdb = db;
-  });
 });
 
 app.get('/', function(req, res) {
