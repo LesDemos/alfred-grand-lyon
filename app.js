@@ -35,7 +35,7 @@ bot.on('message', (payload, reply) => {
     fb_id: senderid,
     text: text
   };
-  reportsCollection.insertOne(report, function(err, res) {});
+  reportsCollection.insert(report, function(err, res) {});
 
   reply({
       text
