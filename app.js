@@ -76,7 +76,6 @@ var menuButtons = [
     }
 ];
 bot.setPersistentMenu(menuButtons);
-
 bot.on('postback', function(userId, payload){
 
     if (payload == "QUERY_PAYLOAD") {
@@ -85,6 +84,7 @@ bot.on('postback', function(userId, payload){
      
 });
 function importPicture(userId){
+  
   let messageData = {
     "attachment":{
       "type":"template",
@@ -116,15 +116,15 @@ function importPicture(userId){
       }
     }
   }
-  request({
-    url:"https://graph.facebook.com/v2.6/me/messages",
-    qs: {access_token:token},
+  bot.sendMessage({id:sender}, 
+    {url:"https://graph.facebook.com/v2.6/me/messages",
+     qs: {access_token:token},
       method: 'POST',
       json: {
         recipient: {id:sender},
         message: messageData,
-      }
-  },function(error, response, body) {
+      }}, 
+    function(error, response, body) {
       if (error) {
         console.log('Error sending messages: ', error)
       } else if (response.body.error) {
