@@ -48,7 +48,21 @@ bot.on('message', (payload, reply) => {
     }
   );
 });
+bot.setGetStartedButton("GET_STARTED");
+bot.on('postback', function(userId, payload){
 
+    if (payload == "GET_STARTED") {
+        getStarted(userId);
+    }
+    
+    // Other postback callbacks here
+    // ...
+    
+});
+function getStarted(userId){
+    
+    // Get started process 
+}
 app.use(bodyParser.json());
 
 app.use(bodyParser.urlencoded({
