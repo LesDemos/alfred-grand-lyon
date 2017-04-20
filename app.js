@@ -48,21 +48,35 @@ bot.on('message', (payload, reply) => {
     }
   );
 });
-bot.setGetStartedButton("GET_STARTED");
-bot.on('postback', function(userId, payload){
-
-    if (payload == "GET_STARTED") {
-        getStarted(userId);
+var menuButtons = [
+    {
+        "type": "postback",
+        "title": "Signaler",
+        "payload": "QUERY_PAYLOAD"
+    },
+    {
+        "type": "postback",
+        "title": "Pannes autour de toi",
+        "payload": "MAP_PAYLOAD"
+    },
+    {
+        "type": "postback",
+        "title": "Contacter un agent",
+        "payload": "CONTACT_PAYLOAD"
+    },
+    {
+        "type": "postback",
+        "title": "Mes signalisations",
+        "payload": "USER_QUERIES_PAYLOAD"
+    },
+    {
+        "type": "web_url",
+        "title": "Infos Métropole",
+        "url": "https://www.grandlyon.com/"
     }
-    
-    // Other postback callbacks here
-    // ...
-    
-});
-function getStarted(userId){
-    
-    // Get started process 
-}
+];
+bot.setPersistentMenu(menuButtons);
+
 app.use(bodyParser.json());
 
 app.use(bodyParser.urlencoded({
