@@ -101,7 +101,7 @@ function importPicture(userId){
         "elements":[
         {
           "title":"Importer image"
-          "image_url":"https://cdn0.iconfinder.com/data/icons/command-buttons/512/Download-512.png"
+          "image_url":"https://cdn0.iconfinder.com/data/icons/command-buttons/512/Download-512.png",
           "buttons":[{
             "type":"postback"
             "title":"Importer"
@@ -110,7 +110,7 @@ function importPicture(userId){
         },
         {
           "title":"Prendre photo"
-          "image_url":"https://1.bp.blogspot.com/-NmEv1_UgXpU/VAFDFCXII4I/AAAAAAAADPc/B8xVJHihGTs/s1600/camera%2Bicon%2Bin%2BGalaxy%2BS5.png"
+          "image_url":"https://1.bp.blogspot.com/-NmEv1_UgXpU/VAFDFCXII4I/AAAAAAAADPc/B8xVJHihGTs/s1600/camera%2Bicon%2Bin%2BGalaxy%2BS5.png",
           "buttons":[{
             "type":"postback"
             "title":"Prendre"
@@ -123,7 +123,7 @@ function importPicture(userId){
     }
   }
   request({
-    url:"https://1.bp.blogspot.com/-NmEv1_UgXpU/VAFDFCXII4I/AAAAAAAADPc/B8xVJHihGTs/s1600/camera%2Bicon%2Bin%2BGalaxy%2BS5.png",
+    url:"https://graph.facebook.com/v2.6/me/messages",
     qs: {access_token:token},
       method: 'POST',
       json: {
