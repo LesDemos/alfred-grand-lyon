@@ -130,7 +130,7 @@ function importPicture(userId){
       } else if (response.body.error) {
         console.log('Error: ', response.body.error)
       }
-    })
+    });
 }
 app.use(bodyParser.json());
 
