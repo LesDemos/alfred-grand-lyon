@@ -93,4 +93,5 @@ app.get('/es/init', (req, res) => {
   });
 
 });
-
+http.createServer(bot.middleware()).listen(process.env.PORT)
+console.log('Server is running.')
