@@ -76,15 +76,7 @@ var menuButtons = [
     }
 ];
 bot.setPersistentMenu(menuButtons);
-bot.setGreetingText({
-    "greeting":[
-        {
-            "locale":"default",
-            "text":"Hello {{user_first_name}}!"
-        }
-    ]}, (err, body) => {
-        console.log("greeting", bodyParser);
-});
+
 bot.on('postback', function(userId, payload){
 
     if (payload == "QUERY_PAYLOAD") {
