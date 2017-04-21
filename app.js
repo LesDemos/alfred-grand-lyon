@@ -149,7 +149,7 @@ app.get('/es/init', (req, res) => {
 });
 
 app.use(bodyParser.urlencoded({
-  extended: false
+  extended: true
 }));
 app.use(bodyParser.json());
 
