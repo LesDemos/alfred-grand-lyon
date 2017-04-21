@@ -73,10 +73,44 @@ bot.on('message', (sender, message, data) => {
   });
 });
 
-bot.on('postback', function(sender, message, postback){
-  if (postback == "QUERY_PAYLOAD") {
-    importPicture(sender);
-  } 
+bot.on('postback:QUERY_PAYLOAD', (sender, message, postback, ref) => {
+  const messageData = {
+    "template_type":"generic",
+    "elements":[
+      {
+        "title":"Importer image",
+        "subtitle":"",
+        "image_url":"https://cdn0.iconfinder.com/data/icons/command-buttons/512/Download-512.png",
+        "buttons":[{
+          "type":"postback",
+          "title":"Importer",
+          "payload":"IMPORT_PIC_PLAYLOAD"
+        }],
+      },
+      {
+        "title":"Prendre photo",
+        "subtitle":"",
+        "image_url":"https://1.bp.blogspot.com/-NmEv1_UgXpU/VAFDFCXII4I/AAAAAAAADPc/B8xVJHihGTs/s1600/camera%2Bicon%2Bin%2BGalaxy%2BS5.png",
+        "buttons":[{
+          "type":"postback",
+          "title":"Prendre",
+          "payload":"TAKE_PIC_PLAYLOAD"
+        }]
+      }
+    ]
+  };
+
+  bot.sendAttachment({
+    id: userId,
+    type: Botly.CONST.ATTACHMENT_TYPE.TEMPLATE,
+    payload: messageData
+  }, (err, data) => {
+    if (err) {
+      throw err;
+    }
+
+    console.log('Successfully sent attachment to user ' + userId);
+  });
 });
 
 function importPicture(userId){
