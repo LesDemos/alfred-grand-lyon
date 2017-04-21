@@ -74,7 +74,7 @@ bot.on('message', (sender, message, data) => {
   });
 });
 
-bot.on('postback', function(sender, message, postback, ref){
+bot.on('postback', function(sender, message, postback){
   if (postback == "QUERY_PAYLOAD") {
     importPicture(sender);
   } 
@@ -120,8 +120,6 @@ function importPicture(userId){
   });
 }
 
-app.use('/bot/fb', bot.router());
-
 app.get('/', function(req, res) {
   console.log('Received request on /');
   res.status(200).send('Hello Alfred!');
@@ -148,10 +146,9 @@ app.get('/es/init', (req, res) => {
 
 });
 
-app.use(bodyParser.urlencoded({
-  extended: true
-}));
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: false}));
+app.use('/bot/fb', bot.router());
 
 app.listen(PORT, function() {
   console.log('Listening on port ' + PORT);
