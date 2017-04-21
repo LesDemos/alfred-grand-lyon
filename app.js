@@ -79,7 +79,7 @@ bot.on('message', (sender, message, data) => {
     
 });
 
-bot.on('postback:QUERY_PAYLOAD', (sender, message, postback) => {
+bot.on('postback', (sender, message, postback) => {
   console.log('postback:', sender, message, postback);
 });
 
