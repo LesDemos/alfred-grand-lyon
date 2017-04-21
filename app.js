@@ -109,7 +109,7 @@ function importPicture(userId){
                 }
             });
 
-   botly.sendList({id: userId, elements: [element, element2], buttons: bot.createPostbackButton('Continue', 'continue'), top_element_style: botly.CONST.TOP_ELEMENT_STYLE.LARGE},function (err, data) {
+   bot.sendList({id: userId, elements: [element, element2], buttons: bot.createPostbackButton('Continue', 'continue'), top_element_style: botly.CONST.TOP_ELEMENT_STYLE.LARGE},function (err, data) {
                 console.log('send list cb:', err, data);
             });
 }
