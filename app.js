@@ -67,7 +67,7 @@ bot.on('message', (sender, message, data) => {
   reportsCollection.insert(report);
 
   if(data.text.toUpperCase() === 'SIGNALER'){
-      importPicture(sender.id);
+      importPicture(sender);
   }
   else{
     bot.sendText({
@@ -80,8 +80,8 @@ bot.on('message', (sender, message, data) => {
 
 bot.on('postback', (sender, message, postback) => {
   console.log('postback:', sender, message, postback);
-  if(postback.payload ==='QUERY_PAYLOAD'){
-    importPicture(sender.id)
+  if(postback==='QUERY_PAYLOAD'){
+    importPicture(sender);
   }
 });
 
