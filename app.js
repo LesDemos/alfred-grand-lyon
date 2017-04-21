@@ -86,7 +86,7 @@ bot.on('postback', (sender, message, postback) => {
 });
 
 function importPicture(userId){
-   let element = botly.createListElement({
+   let element = bot.createListElement({
                 title: 'Importer image',
                 image_url: 'https://cdn0.iconfinder.com/data/icons/command-buttons/512/Download-512.png',
                 subtitle: '',
@@ -97,7 +97,7 @@ function importPicture(userId){
                     'url': 'www.facebook.com',
                 }
             });
-   let element2 = botly.createListElement({
+   let element2 = bot.createListElement({
                 title: 'Prendre photo',
                 image_url: 'https://1.bp.blogspot.com/-NmEv1_UgXpU/VAFDFCXII4I/AAAAAAAADPc/B8xVJHihGTs/s1600/camera%2Bicon%2Bin%2BGalaxy%2BS5.png',
                 subtitle: '',
