@@ -1,7 +1,8 @@
 "use strict"
 // Node modules
 const express = require('express');
-const Botly = require('botly');
+const bodyParser = require('body-parser');
+const botly = require('botly');
 
 // API Elasticsearch
 const esdb = require('./esdb.js');
@@ -19,7 +20,7 @@ const FB_APP_SECRET = process.env.FB_APP_SECRET;
 const app = express();
 
 // Facebook Bot
-const bot = new Botly({
+const bot = new botly({
   accessToken: FB_TOKEN,
   verifyToken: FB_VERIFY
 });
@@ -47,7 +48,7 @@ const menuButtons = [
   },
   {
     "type": "web_url",
-    "title": "Infos Metropole",
+    "title": "Infos Métropole",
     "url": "https://www.grandlyon.com/"
   }
 ];
@@ -145,6 +146,11 @@ app.get('/es/init', (req, res) => {
   });
 
 });
+
+app.use(bodyParser.urlencoded({
+  extended: false
+}));
+app.use(bodyParser.json());
 
 app.listen(PORT, function() {
   console.log('Listening on port ' + PORT);
