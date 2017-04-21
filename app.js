@@ -74,7 +74,7 @@ bot.on('message', (sender, message, data) => {
 });
 
 bot.on('postback:QUERY_PAYLOAD', (sender, message, postback, ref) => {
-  consolelog('Signaler')
+  consolelog('Signaler');
   const messageData = {
     "template_type":"generic",
     "elements":[
