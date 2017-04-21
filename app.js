@@ -74,6 +74,7 @@ bot.on('message', (sender, message, data) => {
 });
 
 bot.on('postback:QUERY_PAYLOAD', (sender, message, postback, ref) => {
+  consolelog('Signaler')
   const messageData = {
     "template_type":"generic",
     "elements":[
@@ -113,7 +114,7 @@ bot.on('postback:QUERY_PAYLOAD', (sender, message, postback, ref) => {
   });
 });
 
-function importPicture(userId){
+/*function importPicture(userId){
   const messageData = {
     "template_type":"generic",
     "elements":[
@@ -151,7 +152,7 @@ function importPicture(userId){
 
     console.log('Successfully sent attachment to user ' + userId);
   });
-}
+}*/
 
 app.get('/', function(req, res) {
   console.log('Received request on /');
