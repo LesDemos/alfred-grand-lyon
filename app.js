@@ -14,7 +14,6 @@ const chatbotdb = require('./chatbotdb.js');
 const PORT = process.env.PORT;
 const FB_TOKEN = process.env.FB_TOKEN;
 const FB_VERIFY = process.env.FB_VERIFY;
-const FB_APP_SECRET = process.env.FB_APP_SECRET;
 
 // Express
 const app = express();
