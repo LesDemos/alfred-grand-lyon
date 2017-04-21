@@ -19,7 +19,8 @@
     "botly": "^1.4.0",
     "elasticsearch": "^13.0.0-rc2",
     "express": "^4.12.3",
-    "mongojs": "^2.4.0"
+    "mongojs": "^2.4.0",
+    "uuid": "^3.0.1"
   },
   "license": "MIT"
 }
