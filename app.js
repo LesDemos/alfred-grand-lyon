@@ -47,7 +47,7 @@ const menuButtons = [
   },
   {
     "type": "web_url",
-    "title": "Infos Métropole",
+    "title": "Infos Metropole",
     "url": "https://www.grandlyon.com/"
   }
 ];
