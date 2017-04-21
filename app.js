@@ -79,45 +79,8 @@ bot.on('message', (sender, message, data) => {
     
 });
 
-bot.on('postback:QUERY_PAYLOAD', (sender, message, postback, ref) => {
-  console.log('Signaler');
-  const messageData = {
-    "template_type":"generic",
-    "elements":[
-      {
-        "title":"Importer image",
-        "subtitle":"",
-        "image_url":"https://cdn0.iconfinder.com/data/icons/command-buttons/512/Download-512.png",
-        "buttons":[{
-          "type":"postback",
-          "title":"Importer",
-          "payload":"IMPORT_PIC_PLAYLOAD"
-        }],
-      },
-      {
-        "title":"Prendre photo",
-        "subtitle":"",
-        "image_url":"https://1.bp.blogspot.com/-NmEv1_UgXpU/VAFDFCXII4I/AAAAAAAADPc/B8xVJHihGTs/s1600/camera%2Bicon%2Bin%2BGalaxy%2BS5.png",
-        "buttons":[{
-          "type":"postback",
-          "title":"Prendre",
-          "payload":"TAKE_PIC_PLAYLOAD"
-        }]
-      }
-    ]
-  };
-
-  bot.sendAttachment({
-    id: userId,
-    type: Botly.CONST.ATTACHMENT_TYPE.TEMPLATE,
-    payload: messageData
-  }, (err, data) => {
-    if (err) {
-      throw err;
-    }
-
-    console.log('Successfully sent attachment to user ' + userId);
-  });
+bot.on('postback:QUERY_PAYLOAD', (sender, message, postback) => {
+  console.log('postback:', sender, message, postback);
 });
 
 function importPicture(userId){
@@ -143,7 +106,7 @@ function importPicture(userId){
                     'url': 'www.facebook.com',
                 }
             });
-   
+
    botly.sendList({id: sender, elements: [element, element2], buttons: botly.createPostbackButton('Continue', 'continue'), top_element_style: Botly.CONST.TOP_ELEMENT_STYLE.LARGE},function (err, data) {
                 console.log('send list cb:', err, data);
             });
