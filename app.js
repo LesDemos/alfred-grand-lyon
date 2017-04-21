@@ -1,7 +1,7 @@
 "use strict"
 // Node modules
 const express = require('express');
-const Bot = require('botly');
+const Botly = require('botly');
 
 // API Elasticsearch
 const esdb = require('./esdb.js');
