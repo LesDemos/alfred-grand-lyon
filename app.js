@@ -109,7 +109,7 @@ bot.on('postback:QUERY_PAYLOAD', (sender, message, postback, ref) => {
 
   bot.sendAttachment({
     id: userId,
-    type: Botly.CONST.ATTACHMENT_TYPE.TEMPLATE,
+    type: botly.CONST.ATTACHMENT_TYPE.TEMPLATE,
     payload: messageData
   }, (err, data) => {
     if (err) {
@@ -149,7 +149,7 @@ function importPicture(userId){
 
   bot.sendAttachment({
     id: userId,
-    type: Botly.CONST.ATTACHMENT_TYPE.TEMPLATE,
+    type: botly.CONST.ATTACHMENT_TYPE.TEMPLATE,
     payload: messageData
   }, (err, data) => {
     if (err) {
