@@ -67,7 +67,7 @@ bot.on('message', (sender, message, data) => {
   };
   reportsCollection.insert(report);
 
-  if(data.text=='Signaler'){
+  if(data.text.toUpperCase() === 'SIGNALER'){
       importPicture(sender);
   }
   else{
