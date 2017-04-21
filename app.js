@@ -60,6 +60,7 @@ bot.on('error', (err) => {
 });
 
 bot.on('message', (sender, message, data) => {
+  console.log('Received message : ' + data.text);
   const reportsCollection = chatbotdb.collection('reports');
   const report = {
     fb_id: sender,
