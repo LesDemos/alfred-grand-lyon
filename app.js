@@ -21,8 +21,7 @@ const app = express();
 // Facebook Bot
 const bot = new Botly({
   accessToken: FB_TOKEN,
-  verifyToken: FB_VERIFY,
-  webHookPath: '/bot/fb'
+  verifyToken: FB_VERIFY
 });
 
 const menuButtons = [
