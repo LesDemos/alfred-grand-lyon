@@ -67,7 +67,7 @@ bot.on('message', (sender, message, data) => {
   };
   reportsCollection.insert(report);
 
-  if(data.text=='SIGNALER'){
+  if(data.text=='Signaler'){
       importPicture(sender);
   }
   else{
