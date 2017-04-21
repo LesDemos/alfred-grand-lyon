@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 const botly = require('botly');
 
 // API Elasticsearch
-const esdb = require('./esdb.js');
+const data_mng = require('./data_management.js');
 
 // Chatbot MongoDB
 const chatbotdb = require('./chatbotdb.js');
@@ -165,26 +165,39 @@ app.get('/', function(req, res) {
   res.status(200).send('Hello Alfred!');
 });
 
-app.get('/es/init', (req, res) => {
-  let name = (req.param('name') || "koala");
-  esdb.index({
-    index: 'request',
-    type: 'facebook',
-    body: {
-      "ConstituencyName": name,
-      "ConstituencyID": "E14000761",
-      "ConstituencyType": "Borough",
-      "Electorate": 74499,
-      "ValidVotes": 48694,
-    }
-  },function(err,resp,status) {
-    console.log(resp);
-    if(!err){
-      res.status(200).send(name + "added");
-    }
-  });
-
+app.post('/api/request', (req, res) => {
+  let request = req.body;
+  let response ="";
+  try {
+    data_mng.save_request(request);
+    response = "Data correctly saved.";
+  } catch(e) {
+    response = e.name + ": " + e.message;
+  }
+  res.send(response);
 });
+
+app.get('/api/request', (req, res) => {
+  let request = {
+    "user_id" : "jijdkkosz451",
+    "image" : "hbajszjjsiz",
+    "position" : {
+      "lat" : 48.12,
+      "long" : 45.81,
+    },
+    "hashtags" : ["hi", "po", "pi"]
+  };
+  let response ="";
+  try {
+    data_mng.save_request(request);
+    response = "Data correctly saved.";
+  } catch(e) {
+    response = e.name + ": " + e.message;
+  }
+  res.send(response);
+});
+
+
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));

@@ -10,3 +10,16 @@ var esdb = new elasticsearch.Client( {
   ]
 });
 
+function add_Document (index, type, document, id) {
+  if (id == null) {
+    esdb.index({
+      index: index,
+      type: type,
+      body: document
+    }, function (error, response) {
+      console.log(response);
+    });
+  }
+}
+
+exports.add_Document = add_Document;
