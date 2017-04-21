@@ -14,7 +14,6 @@ const chatbotdb = require('./chatbotdb.js');
 const PORT = process.env.PORT;
 const FB_TOKEN = process.env.FB_TOKEN;
 const FB_VERIFY = process.env.FB_VERIFY;
-const FB_APP_SECRET = process.env.FB_APP_SECRET;
 
 // Express
 const app = express();
@@ -79,85 +78,40 @@ bot.on('message', (sender, message, data) => {
     
 });
 
-bot.on('postback:QUERY_PAYLOAD', (sender, message, postback, ref) => {
-  console.log('Signaler');
-  const messageData = {
-    "template_type":"generic",
-    "elements":[
-      {
-        "title":"Importer image",
-        "subtitle":"",
-        "image_url":"https://cdn0.iconfinder.com/data/icons/command-buttons/512/Download-512.png",
-        "buttons":[{
-          "type":"postback",
-          "title":"Importer",
-          "payload":"IMPORT_PIC_PLAYLOAD"
-        }],
-      },
-      {
-        "title":"Prendre photo",
-        "subtitle":"",
-        "image_url":"https://1.bp.blogspot.com/-NmEv1_UgXpU/VAFDFCXII4I/AAAAAAAADPc/B8xVJHihGTs/s1600/camera%2Bicon%2Bin%2BGalaxy%2BS5.png",
-        "buttons":[{
-          "type":"postback",
-          "title":"Prendre",
-          "payload":"TAKE_PIC_PLAYLOAD"
-        }]
-      }
-    ]
-  };
-
-  bot.sendAttachment({
-    id: userId,
-    type: botly.CONST.ATTACHMENT_TYPE.TEMPLATE,
-    payload: messageData
-  }, (err, data) => {
-    if (err) {
-      throw err;
-    }
-
-    console.log('Successfully sent attachment to user ' + userId);
-  });
+bot.on('postback', (sender, message, postback) => {
+  console.log('postback:', sender, message, postback);
+  if(postback==='QUERY_PAYLOAD'){
+    importPicture(sender);
+  }
 });
 
 function importPicture(userId){
-  const messageData = {
-    "template_type":"generic",
-    "elements":[
-      {
-        "title":"Importer image",
-        "subtitle":"",
-        "image_url":"https://cdn0.iconfinder.com/data/icons/command-buttons/512/Download-512.png",
-        "buttons":[{
-          "type":"postback",
-          "title":"Importer",
-          "payload":"IMPORT_PIC_PLAYLOAD"
-        }],
-      },
-      {
-        "title":"Prendre photo",
-        "subtitle":"",
-        "image_url":"https://1.bp.blogspot.com/-NmEv1_UgXpU/VAFDFCXII4I/AAAAAAAADPc/B8xVJHihGTs/s1600/camera%2Bicon%2Bin%2BGalaxy%2BS5.png",
-        "buttons":[{
-          "type":"postback",
-          "title":"Prendre",
-          "payload":"TAKE_PIC_PLAYLOAD"
-        }]
-      }
-    ]
-  };
+   let element = bot.createListElement({
+                title: 'Importer image',
+                image_url: 'https://cdn0.iconfinder.com/data/icons/command-buttons/512/Download-512.png',
+                subtitle: '',
+                buttons: [
+                    {title: 'Importer', payload: 'IMPORT_PIC_PLAYLOAD'},
+                ],
+                default_action: {
+                    'url': 'www.facebook.com',
+                }
+            });
+   let element2 = bot.createListElement({
+                title: 'Prendre photo',
+                image_url: 'https://1.bp.blogspot.com/-NmEv1_UgXpU/VAFDFCXII4I/AAAAAAAADPc/B8xVJHihGTs/s1600/camera%2Bicon%2Bin%2BGalaxy%2BS5.png',
+                subtitle: '',
+                buttons: [
+                    {title: 'Prendre', payload: 'TAKE_PIC_PLAYLOAD'},
+                ],
+                default_action: {
+                    'url': 'www.facebook.com',
+                }
+            });
 
-  bot.sendAttachment({
-    id: userId,
-    type: botly.CONST.ATTACHMENT_TYPE.TEMPLATE,
-    payload: messageData
-  }, (err, data) => {
-    if (err) {
-      throw err;
-    }
-
-    console.log('Successfully sent attachment to user ' + userId);
-  });
+   bot.sendList({id: userId, elements: [element, element2], buttons: bot.createPostbackButton('Continue', 'continue'), top_element_style: botly.CONST.TOP_ELEMENT_STYLE.LARGE},function (err, data) {
+                console.log('send list cb:', err, data);
+            });
 }
 
 app.get('/', function(req, res) {
