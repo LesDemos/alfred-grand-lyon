@@ -80,26 +80,26 @@ bot.on('postback', function(sender, message, postback, ref){
 
 function importPicture(userId){
   const messageData = {
-    template_type:"generic",
-    elements:[
+    "template_type":"generic",
+    "elements":[
       {
-        title:"Importer image",
-        subtitle:"",
-        image_url:"https://cdn0.iconfinder.com/data/icons/command-buttons/512/Download-512.png",
-        buttons:[{
-          type:"postback",
-          title:"Importer",
-          payload:"IMPORT_PIC_PLAYLOAD",
+        "title":"Importer image",
+        "subtitle":"",
+        "image_url":"https://cdn0.iconfinder.com/data/icons/command-buttons/512/Download-512.png",
+        "buttons":[{
+          "type":"postback",
+          "title":"Importer",
+          "payload":"IMPORT_PIC_PLAYLOAD"
         }],
       },
       {
-        title:"Prendre photo",
-        subtitle:"",
-        image_url:"https://1.bp.blogspot.com/-NmEv1_UgXpU/VAFDFCXII4I/AAAAAAAADPc/B8xVJHihGTs/s1600/camera%2Bicon%2Bin%2BGalaxy%2BS5.png",
-        buttons:[{
-          type:"postback",
-          title:"Prendre",
-          payload:"TAKE_PIC_PLAYLOAD",
+        "title":"Prendre photo",
+        "subtitle":"",
+        "image_url":"https://1.bp.blogspot.com/-NmEv1_UgXpU/VAFDFCXII4I/AAAAAAAADPc/B8xVJHihGTs/s1600/camera%2Bicon%2Bin%2BGalaxy%2BS5.png",
+        "buttons":[{
+          "type":"postback",
+          "title":"Prendre",
+          "payload":"TAKE_PIC_PLAYLOAD"
         }]
       }
     ]
