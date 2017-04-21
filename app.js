@@ -27,29 +27,29 @@ const bot = new botly({
 
 const menuButtons = [
   {
-    "type": "postback",
-    "title": "Signaler",
-    "payload": "QUERY_PAYLOAD"
+    type: 'postback',
+    title: 'Signaler',
+    payload: 'QUERY_PAYLOAD'
   },
   {
-    "type": "postback",
-    "title": "Pannes autour de toi",
-    "payload": "MAP_PAYLOAD"
+    type: "postback",
+    title: "Pannes autour de toi",
+    payload: "MAP_PAYLOAD"
   },
   {
-    "type": "postback",
-    "title": "Contacter un agent",
-    "payload": "CONTACT_PAYLOAD"
+    type: "postback",
+    title: "Contacter un agent",
+    payload: "CONTACT_PAYLOAD"
   },
   {
-    "type": "postback",
-    "title": "Mes signalisations",
-    "payload": "USER_QUERIES_PAYLOAD"
+    type: "postback",
+    title: "Mes signalisations",
+    payload: "USER_QUERIES_PAYLOAD"
   },
   {
-    "type": "web_url",
-    "title": "Infos Métropole",
-    "url": "https://www.grandlyon.com/"
+    type: "web_url",
+    title: "Infos Métropole",
+    url: "https://www.grandlyon.com/"
   }
 ];
 
@@ -67,10 +67,16 @@ bot.on('message', (sender, message, data) => {
   };
   reportsCollection.insert(report);
 
-  bot.sendText({
+  if(text=='SIGNALER'){
+      importPicture(sender);
+  }
+  else{
+    bot.sendText({
     id: sender,
     text: data.text
   });
+  }
+    
 });
 
 bot.on('postback:QUERY_PAYLOAD', (sender, message, postback, ref) => {
@@ -114,7 +120,7 @@ bot.on('postback:QUERY_PAYLOAD', (sender, message, postback, ref) => {
   });
 });
 
-/*function importPicture(userId){
+function importPicture(userId){
   const messageData = {
     "template_type":"generic",
     "elements":[
@@ -152,7 +158,7 @@ bot.on('postback:QUERY_PAYLOAD', (sender, message, postback, ref) => {
 
     console.log('Successfully sent attachment to user ' + userId);
   });
-}*/
+}
 
 app.get('/', function(req, res) {
   console.log('Received request on /');
