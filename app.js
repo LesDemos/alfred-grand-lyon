@@ -67,7 +67,7 @@ bot.on('message', (sender, message, data) => {
   };
   reportsCollection.insert(report);
 
-  if(text=='SIGNALER'){
+  if(data.text=='SIGNALER'){
       importPicture(sender);
   }
   else{
@@ -80,7 +80,7 @@ bot.on('message', (sender, message, data) => {
 });
 
 bot.on('postback:QUERY_PAYLOAD', (sender, message, postback, ref) => {
-  consolelog('Signaler');
+  console.log('Signaler');
   const messageData = {
     "template_type":"generic",
     "elements":[
