@@ -22,7 +22,7 @@ const app = express();
 const bot = new Botly({
   accessToken: FB_TOKEN,
   verifyToken: FB_VERIFY,
-  webHookPath: '/bot/fb/'
+  webHookPath: '/bot/fb'
 });
 
 const menuButtons = [
@@ -65,7 +65,7 @@ bot.on('message', (sender, message, data) => {
     fb_id: sender,
     text: data.text
   };
-  reportsCollection.insert(report, function(err, res) {});
+  reportsCollection.insert(report);
 
   bot.sendText({
     id: sender,
@@ -73,16 +73,13 @@ bot.on('message', (sender, message, data) => {
   });
 });
 
-bot.on('postback', function(userId, payload){
-
-    if (payload == "QUERY_PAYLOAD") {
-        importPicture(userId);
-    }
-     
+bot.on('postback', function(sender, message, postback, ref){
+  if (postback == "QUERY_PAYLOAD") {
+    importPicture(sender);
+  } 
 });
 
 function importPicture(userId){
-  
   const messageData = {
     template_type:"generic",
     elements:[
@@ -113,7 +110,7 @@ function importPicture(userId){
     id: userId,
     type: Botly.CONST.ATTACHMENT_TYPE.TEMPLATE,
     payload: messageData
-  }, (err, data) {
+  }, (err, data) => {
     if (err) {
       throw err;
     }
@@ -122,7 +119,7 @@ function importPicture(userId){
   });
 }
 
-app.use('/bot/fb/', bot.router());
+app.use('/bot/fb', bot.router());
 
 app.get('/', function(req, res) {
   console.log('Received request on /');
