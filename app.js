@@ -11,7 +11,7 @@ const data_mng = require('./data_management.js');
 const chatbotdb = require('./chatbotdb.js');
 
 // Environment variables
-const PORT = 5000;
+const PORT =  process.env.PORT;
 const FB_TOKEN = process.env.FB_TOKEN;
 const FB_VERIFY = process.env.FB_VERIFY;
 
