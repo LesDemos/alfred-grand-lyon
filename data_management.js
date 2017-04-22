@@ -1,6 +1,6 @@
 "use strict"
 // API Elasticsearch
-const esdb = require('./esdb.js');
+const esmng = require('./esmng.js');
 const uuidV1 = require('uuid/v1');
 
 // ES variables
@@ -22,7 +22,7 @@ function save_request(request) {
       let actual_date = new Date();
       request.request_id = key;
       request.date = actual_date;
-      esdb.add_Document(INDEX_REQUEST, TYPE_FACEBOOK, request);
+      esmng.add_document(INDEX_REQUEST, TYPE_FACEBOOK, request);
     } else {
       throw new Error("The request isn't complete");
     }
@@ -32,8 +32,17 @@ function save_request(request) {
   return;
 }
 
-exports.save_request = save_request;
-
-function get_next_hastag(hashtag) {
-    return;
+/* The hashtags associated with the parameter are retrieved from the ES Server and returned. */
+function get_next_hashtags(hashtag) {
+  let hashtags = { hashtags : [] };
+  query =  {
+    match: { "name": hashtag }
+  }
+  let hit = esmng.search_document(INDEX_REQUEST, TYPE_FACEBOOK, query);
+  hashtags = hit.following;
+  return hashtags;
 }
+
+//Exports
+exports.save_request = save_request;
+exports.get_next_hashtags = get_next_hashtags;

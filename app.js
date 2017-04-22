@@ -119,13 +119,23 @@ app.get('/', function(req, res) {
   res.status(200).send('Hello Alfred!');
 });
 
-app.post('/api/request', (req, res) => {
+app.post('/api/request/fb', (req, res) => {
   let request = req.body;
   data_mng.save_request(request);
   res.send("Request processed");
 });
 
-app.get('/api/request', (req, res) => {
+app.get('/api/hashtags', (req, res) => {
+  let hashtag = req.params.param('hashtag');
+  let hashtags = {hashtags : []};
+  if(hashtag !== '') {
+    hashtags = data_mng.get_next_hashtags(hashtag);
+  }
+  res.json(hashtags);
+});
+
+/* Example of data to provide to the route /api/request */
+app.get('/api/request/fb', (req, res) => {
   let request = {
     "user_id" : "jijdkkosz451",
     "image" : "hbajszjjsiz",
