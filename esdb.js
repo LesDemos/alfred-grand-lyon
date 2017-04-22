@@ -17,7 +17,10 @@ function add_Document (index, type, document, id) {
       type: type,
       body: document
     }, function (error, response) {
-      console.log(response);
+      if(error) {
+        console.log("The ElasticSearch server can't save the data");
+        console.log(response);
+      }
     });
   }
 }

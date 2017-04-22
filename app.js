@@ -11,7 +11,7 @@ const data_mng = require('./data_management.js');
 const chatbotdb = require('./chatbotdb.js');
 
 // Environment variables
-const PORT = process.env.PORT;
+const PORT = 5000;
 const FB_TOKEN = process.env.FB_TOKEN;
 const FB_VERIFY = process.env.FB_VERIFY;
 
@@ -121,14 +121,8 @@ app.get('/', function(req, res) {
 
 app.post('/api/request', (req, res) => {
   let request = req.body;
-  let response ="";
-  try {
-    data_mng.save_request(request);
-    response = "Data correctly saved.";
-  } catch(e) {
-    response = e.name + ": " + e.message;
-  }
-  res.send(response);
+  data_mng.save_request(request);
+  res.send("Request processed");
 });
 
 app.get('/api/request', (req, res) => {
@@ -137,18 +131,12 @@ app.get('/api/request', (req, res) => {
     "image" : "hbajszjjsiz",
     "position" : {
       "lat" : 48.12,
-      "long" : 45.81,
+      "lon" : 45.81,
     },
     "hashtags" : ["hi", "po", "pi"]
   };
-  let response ="";
-  try {
-    data_mng.save_request(request);
-    response = "Data correctly saved.";
-  } catch(e) {
-    response = e.name + ": " + e.message;
-  }
-  res.send(response);
+  data_mng.save_request(request);
+  res.send("Request processed");
 });
 
 
