@@ -7,6 +7,7 @@ const uuidV1 = require('uuid/v1');
 const INDEX_REQUEST = 'request';
 const INDEX_HASHTAGS = 'syntax_tree';
 const TYPE_FACEBOOK = 'facebook';
+const FIRST_HASHTAG = 'Origine';
 
 var exports = module.exports = {};
 
@@ -30,14 +31,16 @@ function save_request(request) {
   } catch (e) {
     console.log(e);
   }
-  return;
 }
 
 /* The hashtags associated with the parameter are retrieved from the ES Server and returned. */
 function get_next_hashtags(hashtag, res) {
+  if(hashtag === '') {
+    hashtag = FIRST_HASHTAG;
+  }
   let query =  {
     match: { "name": hashtag }
-  }
+  };
   esmng.search_document(INDEX_HASHTAGS, TYPE_FACEBOOK, query, function (hit) {
     let hashtags = { hashtags : [] };
     if (hit != null) {
