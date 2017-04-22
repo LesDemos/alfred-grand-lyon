@@ -126,12 +126,10 @@ app.post('/api/request/fb', (req, res) => {
 });
 
 app.get('/api/hashtags', (req, res) => {
-  let hashtag = req.params.param('hashtag');
-  let hashtags = {hashtags : []};
+  let hashtag = req.query.hashtag;
   if(hashtag !== '') {
-    hashtags = data_mng.get_next_hashtags(hashtag);
+    data_mng.get_next_hashtags(hashtag, res);
   }
-  res.json(hashtags);
 });
 
 /* Example of data to provide to the route /api/request */

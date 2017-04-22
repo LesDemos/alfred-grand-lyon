@@ -25,11 +25,11 @@ function add_document (index, type, document, id) {
   }
 }
 
-function search_document (index, type, query) {
+function search_document (index, type, query, callback) {
   let document = null;
   esdb.search({
-    index: 'index',
-    type: 'type',
+    index: index,
+    type: type,
     body: {
       query: query
     }
@@ -43,9 +43,12 @@ function search_document (index, type, query) {
       console.log("--- Hits ---");
       response.hits.hits.forEach(function(hit){
         console.log(hit);
-      })
-      document = response.hits.hits[0]
+      });
+      if(response.hits.hits.length != 0) {
+        document = response.hits.hits[0];
+      }
     }
+    callback(document);
   });
 }
 
