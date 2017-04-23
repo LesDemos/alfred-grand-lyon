@@ -12,9 +12,6 @@ const fbBot = new FBBot({
   verify_token: process.env.FB_VERIFY
 });
 
-console.log('After fbBot construction');
-console.log(fbBot.botly);
-
 fbBot.addProcess({proc: new FBGreeting(), is_main: true});
 fbBot.addProcess({proc: new FBMenu()});
 fbBot.addProcess({proc: new FBReport()});
