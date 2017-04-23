@@ -5,7 +5,9 @@ const uuidV1 = require('uuid/v1');
 
 // ES variables
 const INDEX_REQUEST = 'request';
+const INDEX_HASHTAGS = 'syntax_tree';
 const TYPE_FACEBOOK = 'facebook';
+const FIRST_HASHTAG = 'Origine';
 
 var exports = module.exports = {};
 
@@ -29,18 +31,23 @@ function save_request(request) {
   } catch (e) {
     console.log(e);
   }
-  return;
 }
 
 /* The hashtags associated with the parameter are retrieved from the ES Server and returned. */
-function get_next_hashtags(hashtag) {
-  let hashtags = { hashtags : [] };
-  query =  {
-    match: { "name": hashtag }
+function get_next_hashtags(hashtag, res) {
+  if(hashtag === '') {
+    hashtag = FIRST_HASHTAG;
   }
-  let hit = esmng.search_document(INDEX_REQUEST, TYPE_FACEBOOK, query);
-  hashtags = hit.following;
-  return hashtags;
+  let query =  {
+    match: { "name": hashtag }
+  };
+  esmng.search_document(INDEX_HASHTAGS, TYPE_FACEBOOK, query, function (hit) {
+    let hashtags = { hashtags : [] };
+    if (hit != null) {
+      hashtags.hashtags = hit._source.following;
+    }
+    res.json(hashtags);
+  });
 }
 
 //Exports

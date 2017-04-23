@@ -122,16 +122,15 @@ app.get('/', function(req, res) {
 app.post('/api/request/fb', (req, res) => {
   let request = req.body;
   data_mng.save_request(request);
-  res.send("Request processed");
 });
 
 app.get('/api/hashtags', (req, res) => {
-  let hashtag = req.params.param('hashtag');
-  let hashtags = {hashtags : []};
-  if(hashtag !== '') {
-    hashtags = data_mng.get_next_hashtags(hashtag);
+  let hashtag = req.query.hashtag;
+  if (hashtag != null) {
+    data_mng.get_next_hashtags(hashtag, res);
+  } else {
+    res.status(500).send("The hashtag parameter is missing");
   }
-  res.json(hashtags);
 });
 
 /* Example of data to provide to the route /api/request */
