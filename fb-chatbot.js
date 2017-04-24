@@ -1,5 +1,12 @@
 'use strict';
 
+/*
+  fb-chatbot.js
+
+  This file's purpose is to set up the Facebook Bot manager (FBBot),
+  by creating the necessary chat processes.
+*/
+
 const FBBot = require('./lib/fb/fb-bot.js');
 const FBProcess = require('./lib/fb/fb-process.js');
 const FBGreeting = require('./lib/fb/fb-greeting.js');
