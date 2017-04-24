@@ -1,13 +1,14 @@
 'use strict';
 
 const FBBot = require('./lib/fb/fb-bot.js');
-const FBGreeting = require('./lib/fb/fb-greeting.js'); 
+const FBGreeting = require('./lib/fb/fb-process.js');
+const FBGreeting = require('./lib/fb/fb-greeting.js');
 const FBMenu = require('./lib/fb/fb-menu.js');
 const FBReport = require('./lib/fb/fb-report.js');
 
 const fbBot = new FBBot({
   db_uri: process.env.MONGODB_URI,
-  db_col: 'fb_process',
+  db_col: FBProcess.CONST.PROCESS.PROCESS,
   access_token: process.env.FB_TOKEN,
   verify_token: process.env.FB_VERIFY
 });
