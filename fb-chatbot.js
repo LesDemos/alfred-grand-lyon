@@ -1,7 +1,7 @@
 'use strict';
 
 const FBBot = require('./lib/fb/fb-bot.js');
-const FBGreeting = require('./lib/fb/fb-process.js');
+const FBProcess = require('./lib/fb/fb-process.js');
 const FBGreeting = require('./lib/fb/fb-greeting.js');
 const FBMenu = require('./lib/fb/fb-menu.js');
 const FBReport = require('./lib/fb/fb-report.js');
