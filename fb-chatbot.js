@@ -24,6 +24,10 @@ fbBot.addProcess({proc: new FBGreeting(), is_main: true});
 fbBot.addProcess({proc: new FBMenu()});
 fbBot.addProcess({proc: new FBReport()});
 
+fbBot.botly.setGetStarted({
+  payload: "GET_STARTED" 
+});
+
 /*
 const menuButtons = [
   {
