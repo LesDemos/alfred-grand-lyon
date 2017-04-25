@@ -28,6 +28,10 @@ fbBot.botly.setGetStarted({
   payload: "GET_STARTED" 
 });
 
+fbBot.botly.setGreetingText({
+  greeting: "C'est le greeting text du début" 
+});
+
 /*
 const menuButtons = [
   {
