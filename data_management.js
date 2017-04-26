@@ -42,11 +42,14 @@ function get_next_hashtags(hashtag, res) {
     match: { "name": hashtag }
   };
   esmng.search_document(INDEX_HASHTAGS, TYPE_FACEBOOK, query, function (hit) {
-    let hashtags = { hashtags : [] };
-    if (hit != null) {
-      hashtags.hashtags = hit._source.following;
+    console.log(hit.length);
+    if (hit.length != 0) {
+      let hashtags = { hashtags : [] };
+      hashtags.hashtags = hit[0]._source.following;
+      res.json(hashtags);
+    } else {
+      res.status(500).send("The hashtag doesn't exist");
     }
-    res.json(hashtags);
   });
 }
 
