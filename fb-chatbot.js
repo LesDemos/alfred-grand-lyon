@@ -17,7 +17,7 @@ const fbBot = new FBBot({
   db_col: FBProcess.CONST.PROCESS.PROCESS,
   access_token: process.env.FB_TOKEN,
   verify_token: process.env.FB_VERIFY,
-  api_url: 'https://127.0.0.1:' + process.env.PORT
+  api_url: process.env.URL
 });
 
 fbBot.addProcess({proc: new FBMenu(), is_main: true});
