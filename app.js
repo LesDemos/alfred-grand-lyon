@@ -14,8 +14,8 @@ const PORT =  process.env.PORT;
 
 // Express
 const app = express();
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 app.use('/bot/fb', fbBot.botly.router());
 
 app.get('/', function(req, res) {
@@ -26,6 +26,7 @@ app.get('/', function(req, res) {
 app.post('/api/request/fb', (req, res) => {
   let request = req.body;
   data_mng.save_request(request);
+  res.send("Report considered");
 });
 
 app.get('/api/hashtags', (req, res) => {
