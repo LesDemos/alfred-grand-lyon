@@ -10,18 +10,15 @@ var esdb = new elasticsearch.Client( {
   ]
 });
 
-function add_document (index, type, document, id) {
+function add_document (index, type, document, callback, id) {
   if (id == null) {
     esdb.index({
       index: index,
       type: type,
       body: document
-    }, function (error, response) {
-      if(error) {
-        console.log("The ElasticSearch server can't save the data");
-        console.log(response);
-      }
-    });
+    }, function(error, response) {
+      callback(error, response);
+    })
   }
 }
 

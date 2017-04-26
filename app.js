@@ -25,8 +25,7 @@ app.get('/', function(req, res) {
 
 app.post('/api/request/fb', (req, res) => {
   let request = req.body;
-  data_mng.save_request(request);
-  res.send("Report considered");
+  data_mng.save_request(request, res);
 });
 
 app.get('/api/hashtags', (req, res) => {

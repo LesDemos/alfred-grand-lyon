@@ -16,20 +16,26 @@ This function save the request into the ES server. The only parameters contains 
 and the hashtags. The date and the request_id are automatically generated.
  */
 
-function save_request(request) {
+function save_request(request, res) {
   try {
-    if (request.hasOwnProperty('user_id') && request.hasOwnProperty('image') && request.hasOwnProperty('position') &&
+      if (request.hasOwnProperty('user_id') && request.hasOwnProperty('image') && request.hasOwnProperty('position') &&
       request.hasOwnProperty('hashtags')) {
       let key = uuidV1();
       let actual_date = new Date();
       request.request_id = key;
       request.date = actual_date;
-      esmng.add_document(INDEX_REQUEST, TYPE_FACEBOOK, request);
+      esmng.add_document(INDEX_REQUEST, TYPE_FACEBOOK, request, function (error, response) {
+        if (error) {
+          res.status(500).send("The report couldn't be saved : " + error.message);
+        } else {
+          res.send("Request considered");
+        }
+      });
     } else {
-      throw new Error("The request isn't complete");
+      throw new Error("The request isn't correct");
     }
   } catch (e) {
-    console.log(e);
+    res.status(500).send(e.message);
   }
 }
 
