@@ -44,9 +44,7 @@ function search_document (index, type, query, callback) {
       response.hits.hits.forEach(function(hit){
         console.log(hit);
       });
-      if(response.hits.hits.length != 0) {
-        document = response.hits.hits[0];
-      }
+      document = response.hits.hits;
     }
     callback(document);
   });
