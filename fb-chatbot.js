@@ -9,7 +9,6 @@
 
 const FBBot = require('./lib/fb/fb-bot.js');
 const FBProcess = require('./lib/fb/fb-process.js');
-const FBGreeting = require('./lib/fb/fb-greeting.js');
 const FBMenu = require('./lib/fb/fb-menu.js');
 const FBReport = require('./lib/fb/fb-report.js');
 
@@ -17,10 +16,10 @@ const fbBot = new FBBot({
   db_uri: process.env.MONGODB_URI,
   db_col: FBProcess.CONST.PROCESS.PROCESS,
   access_token: process.env.FB_TOKEN,
-  verify_token: process.env.FB_VERIFY
+  verify_token: process.env.FB_VERIFY,
+  api_url: 'https://127.0.0.1:' + process.env.PORT
 });
 
-//fbBot.addProcess({proc: new FBGreeting(), is_main: true});
 fbBot.addProcess({proc: new FBMenu(), is_main: true});
 fbBot.addProcess({proc: new FBReport()});
 
