@@ -17,9 +17,12 @@
   "dependencies": {
     "body-parser": "^1.17.1",
     "botly": "^1.4.0",
+    "compression": "^1.6.2",
+    "cors": "^2.8.3",
     "elasticsearch": "^13.0.0-rc2",
     "express": "^4.12.3",
     "mongojs": "^2.4.0",
+    "path": "^0.12.7",
     "request": "^2.81.0",
     "uuid": "^3.0.1"
   },

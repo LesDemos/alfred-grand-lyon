@@ -39,6 +39,97 @@ function save_request(request, res) {
   }
 }
 
+/* This function retrieve all of the reports within the filter provided*/
+
+function get_reports_filtered(request, res) {
+  let query = {"query": {}};
+  try {
+    let filters = request.filters;
+    if (filters) {
+      if(filters.length == 0) {
+        query.query = {
+            "match_all": {}
+        };
+      } else {
+        filters.forEach(function (filter) {
+          query.query = {"bool" : { "must" : []}};
+          switch(filter.type) {
+            case 'time_range' :
+              if(filter.from) {
+                let from = new Date(filter.from);
+                query.query.bool.must.push({
+                  "range": {
+                    "date": {
+                      "gte": from.getTime()
+                    }
+                  }
+                });
+              }
+              if(filter.to) {
+                let to = new Date(filter.from);
+                query.query.bool.must.push({
+                  "range": {
+                    "date": {
+                      "lte": to.getTime()
+                    }
+                  }
+                });
+              }
+              break;
+            case 'user_id' :
+              break;
+            case 'request_id' :
+              break;
+            case 'hashtags' :
+              break;
+            default :
+              break;
+          }
+        });
+      }
+    esmng.search_document(INDEX_REQUEST, TYPE_FACEBOOK, query, function (hits) {
+      let reports = [];
+      if (hits.length != 0) {
+        hits.forEach(function (hit) {
+          reports.push(hit._source);
+        });
+      }
+      let reports_geojson = toGeoJSON(reports);
+      res.json(reports_geojson);
+    });
+    } else {
+    throw new Error("The request isn't correct");
+    }
+  } catch (e) {
+    res.status(500).send(e.message);
+  }
+}
+
+function toGeoJSON(hits) {
+  let geojson = {
+    "type": "FeatureCollection",
+    "features": []
+  };
+  hits.forEach(function (hit) {
+    let properties = {
+      "user_id": hit.user_id,
+      "request_id": hit.request_id,
+      "date": hit.date,
+      "hashtags": hit.hashtags
+    };
+    let coordinates = [hit.position.lon, hit.position.lat];
+    geojson.features.push({
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": coordinates
+      },
+      "properties": properties
+    });
+  });
+  return geojson;
+}
+
 /* The hashtags associated with the parameter are retrieved from the ES Server and returned. */
 function get_next_hashtags(hashtag, res) {
   if(hashtag === '') {
@@ -62,3 +153,4 @@ function get_next_hashtags(hashtag, res) {
 //Exports
 exports.save_request = save_request;
 exports.get_next_hashtags = get_next_hashtags;
+exports.get_reports_filtered = get_reports_filtered;

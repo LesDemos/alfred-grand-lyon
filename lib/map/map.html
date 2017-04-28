@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Alfred Grand Lyon</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css"
+        integrity="sha512-07I2e+7D8p6he1SIM+1twR5TIrhUQn9+I6yjqD53JQjFiMf8EtC93ty0/5vJTZGF8aAocvHYNEDJajGdNx1IsQ=="
+        crossorigin=""/>
+  <link rel="stylesheet" href="static/map.css"/>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script>
+    window.Viz = {
+      'apiEndpoint': 'https://alfred-grand-lyon.herokuapp.com/api/map',
+      'access_token': '3de70360-c8a5-11e4-b154-002219c762a0'
+    }
+  </script>
+  <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"
+          integrity="sha512-A7vV8IFfih/D732iSSKi20u/ooOfj/AGehOKq0f4vLT1Zr2Y+RX7C+w8A1gaSasGtRUZpF/NZgzSAu4/Gc41Lg=="
+          crossorigin=""></script>
+</head>
+<body>
+<div id="app"></div>
+<script src="static/map.js"></script>
+</body>
+</html>

@@ -2,6 +2,9 @@
 // Node modules
 const express = require('express');
 const bodyParser = require('body-parser');
+const path = require('path');
+const cors = require('cors');
+const compression = require('compression');
 
 // API Elasticsearch
 const data_mng = require('./data_management.js');
@@ -14,8 +17,11 @@ const PORT =  process.env.PORT;
 
 // Express
 const app = express();
+app.use('/api/static', express.static(__dirname + '/lib/map'));
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
+app.use(cors());
+app.use(compression());
 app.use('/bot/fb', fbBot.botly.router());
 
 app.get('/', function(req, res) {
@@ -35,6 +41,15 @@ app.get('/api/hashtags', (req, res) => {
   } else {
     res.status(500).send("The hashtag parameter is missing");
   }
+});
+
+app.get('/api/map', (req, res) => {
+  res.sendFile(path.join(__dirname+'/lib/map/map.html'));
+});
+
+app.post('/api/map/reports', (req, res) => {
+  let request = req.body;
+  data_mng.get_reports_filtered(request, res);
 });
 
 /* Example of data to provide to the route /api/request */

@@ -24,6 +24,7 @@ function add_document (index, type, document, callback, id) {
 
 function search_document (index, type, query, callback) {
   let document = null;
+  console.log(JSON.stringify(query));
   esdb.search({
     index: index,
     type: type,
