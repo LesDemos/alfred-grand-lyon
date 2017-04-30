@@ -66,7 +66,7 @@ function get_reports_filtered(request, res) {
                 });
               }
               if(filter.to) {
-                let to = new Date(filter.from);
+                let to = new Date(filter.to);
                 query.query.bool.must.push({
                   "range": {
                     "date": {
@@ -79,6 +79,11 @@ function get_reports_filtered(request, res) {
             case 'user_id' :
               break;
             case 'request_id' :
+              query.query.bool.must.push({
+                "term": {
+                  "request_id": filter.request_id
+                }
+              });
               break;
             case 'hashtags' :
               break;
@@ -94,18 +99,18 @@ function get_reports_filtered(request, res) {
           reports.push(hit._source);
         });
       }
-      let reports_geojson = toGeoJSON(reports);
+      let reports_geojson = toGeoJSON(reports, request);
       res.json(reports_geojson);
     });
     } else {
-    throw new Error("The request isn't correct");
+      throw new Error("The request isn't correct");
     }
   } catch (e) {
     res.status(500).send(e.message);
   }
 }
 
-function toGeoJSON(hits) {
+function toGeoJSON(hits, request) {
   let geojson = {
     "type": "FeatureCollection",
     "features": []
@@ -117,6 +122,9 @@ function toGeoJSON(hits) {
       "date": hit.date,
       "hashtags": hit.hashtags
     };
+    if(request.full == true) {
+      properties.image = hit.image;
+    }
     let coordinates = [hit.position.lon, hit.position.lat];
     geojson.features.push({
       "type": "Feature",

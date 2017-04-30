@@ -47,9 +47,23 @@ app.get('/api/map', (req, res) => {
   res.sendFile(path.join(__dirname+'/lib/map/map.html'));
 });
 
-app.post('/api/map/reports', (req, res) => {
+app.post('/api/reports', (req, res) => {
   let request = req.body;
   data_mng.get_reports_filtered(request, res);
+});
+
+app.get('/api/user', (req, res) => {
+  let user_id = req.query.user_id;
+  if(user_id) {
+    fbBot.botly.getUserProfile(user_id, (err, user_profile) => {
+      if (err) {
+        throw err;
+      }
+      res.json(user_profile);
+    });
+  } else {
+    res.status(500).send("The user_id parameter is missing");
+  }
 });
 
 /* Example of data to provide to the route /api/request */
