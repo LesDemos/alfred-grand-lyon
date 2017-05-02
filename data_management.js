@@ -25,7 +25,7 @@ function save_request(request, res) {
       request.request_id = key;
       request.date = actual_date;
       request.technician_id = "";
-      request.state = "";
+      request.state = "Untreated";
       esmng.add_document(INDEX_REQUEST, TYPE_FACEBOOK, request, function (error, response) {
         if (error) {
           res.status(500).send("The report couldn't be saved : " + error.message);
