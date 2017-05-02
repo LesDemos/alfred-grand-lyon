@@ -28,6 +28,8 @@ function search_document (index, type, query, callback) {
   esdb.search({
     index: index,
     type: type,
+    from : 0,
+    size : 50,
     body: {
       query: query
     }
