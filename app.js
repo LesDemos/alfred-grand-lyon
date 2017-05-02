@@ -24,6 +24,9 @@ app.use(cors());
 app.use(compression());
 app.use('/bot/fb', fbBot.botly.router());
 
+// Constantes
+const TYPE_FACEBOOK = 'facebook';
+
 app.get('/', function(req, res) {
   console.log('Received request on /');
   res.status(200).send('Hello Alfred!');
@@ -31,13 +34,13 @@ app.get('/', function(req, res) {
 
 app.post('/api/request/fb', (req, res) => {
   let request = req.body;
-  data_mng.save_request(request, res);
+  data_mng.save_request(request, res, TYPE_FACEBOOK);
 });
 
 app.get('/api/hashtags', (req, res) => {
   let hashtag = req.query.hashtag;
   if (hashtag != null) {
-    data_mng.get_next_hashtags(hashtag, res);
+    data_mng.get_next_hashtags(hashtag, res, TYPE_FACEBOOK);
   } else {
     res.status(500).send("The hashtag parameter is missing");
   }
@@ -49,7 +52,7 @@ app.get('/api/map', (req, res) => {
 
 app.post('/api/reports', (req, res) => {
   let request = req.body;
-  data_mng.get_reports_filtered(request, res);
+  data_mng.get_reports_filtered(request, res, TYPE_FACEBOOK);
 });
 
 app.get('/api/user', (req, res) => {
