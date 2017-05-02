@@ -24,6 +24,8 @@ function save_request(request, res) {
       let actual_date = new Date();
       request.request_id = key;
       request.date = actual_date;
+      request.technician_id = "";
+      request.state = "";
       esmng.add_document(INDEX_REQUEST, TYPE_FACEBOOK, request, function (error, response) {
         if (error) {
           res.status(500).send("The report couldn't be saved : " + error.message);
