@@ -1,0 +1,71 @@
+<html>
+<head>
+	<meta charset="UTF-8" />
+	<title>Alfred Grand Lyon</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.1/css/materialize.min.css">
+
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css"
+	integrity="sha512-07I2e+7D8p6he1SIM+1twR5TIrhUQn9+I6yjqD53JQjFiMf8EtC93ty0/5vJTZGF8aAocvHYNEDJajGdNx1IsQ=="
+	crossorigin=""/>
+
+	<link rel="stylesheet" href="style.css"/>
+
+	<script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"
+	integrity="sha512-A7vV8IFfih/D732i
+	SSKi20u/ooOfj/AGehOKq0f4vLT1Zr2Y+RX7C+w8A1gaSasGtRUZpF/NZgzSAu4/Gc41Lg=="
+	crossorigin=""></script>
+
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.1/js/materialize.min.js"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular-materialize/0.2.2/angular-materialize.min.js"></script>
+
+</head>
+<body>
+	<div class="navbar-fixed">
+		<nav>
+			<div class="nav-wrapper" id="topNavBar">
+				<a href="#" class="brand-logo center">Alfred</a>
+				<ul id="nav-mobile" class="left hide-on-med-and-down">
+					<li><a href="#intro">Damn Son Where'd You Find This</a></li>
+					<li><a href="#map">Map</a></li>
+					<li><a href="#list">Lists</a></li>
+				</ul>
+			</div>
+		</nav>
+	</div>
+
+	<div class="container">
+
+		<div id="intro" class="row">
+			<h2 class="col m10 offset-m1">Damn Son Where'd You Find This</h2>
+		</div>
+
+		<div class="row">
+			Welcome to the admin application boi.
+
+		</div>
+
+		<div id="map" class="row">
+			<h2 class="col m6 offset-m3">Interaction Map</h2>
+		</div>
+
+		<div class="row">
+			<ul class="collapsible popout" data-collapsible="accordion" watch>
+				<li>
+					<div id="mapButton" class="collapsible-header">Map with localisation</div>
+					<div id="mapId" class="collapsible-body"></div>
+				</li>
+			</ul>
+		</div>
+
+		<div id="list" class="row">
+			<h2 class="col m6 offset-m3">UperDuper List</h2>
+		</div>
+
+	</div>
+
+	<script type="text/javascript" src="app.js"></script>
+</body>
+</html>

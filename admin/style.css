@@ -1,0 +1,80 @@
+
+#mapId { 
+	height: 80%;
+}
+
+.leaflet-popup-content {
+  width:255px;
+  height:150px;
+}
+
+.popup-container {
+  overflow:hidden;
+}
+
+.fb-container{
+  clear:left;
+  float: left;
+  overflow:hidden;
+  width:140px;
+}
+
+.fb-informations {
+  float: left;
+  clear:left;
+}
+
+.fb-thumb {
+  float: left!important;
+  clear:left;
+}
+
+.fb-content {
+  margin-left : 5px;
+  float: left;
+}
+
+.fb-title {
+  margin-bottom: 5px;
+  font-weight: 900;
+  color: #525152;
+}
+
+.fb-subtitle {
+  margin-bottom: 10px;
+  font-weight: 600;
+  color: #7f7e7f;
+}
+
+.fb-text {
+  font-weight: 500;
+  color: #5f5e5f;
+}
+
+.report-informations {
+  clear:left;
+}
+
+.report-thumb {
+  padding-left : 15px;
+  float: left;
+}
+
+.fb-thumb .report-thumb img {
+  display: block;
+  margin-right : 5px;
+}
+
+.fb-tag {
+  display: inline-block;
+  margin-top: 5px;
+  margin-right: 4px;
+  padding: 0 4px;
+  color: #9b9b9b;
+  border: 2px solid #e4e4e4;
+  border-radius: 6px;
+  white-space: nowrap;
+}
+
+
+
