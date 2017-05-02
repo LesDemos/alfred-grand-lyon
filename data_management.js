@@ -54,7 +54,7 @@ function get_reports_filtered(request, res) {
         };
       } else {
         filters.forEach(function (filter) {
-          query.query = {"bool" : { "must" : []}};
+          query.query = {"bool" : { "must" : [], "should" : []}};
           switch(filter.type) {
             case 'time_range' :
               if(filter.from) {
@@ -88,6 +88,15 @@ function get_reports_filtered(request, res) {
               });
               break;
             case 'hashtags' :
+              break;
+            case 'state' :
+              filter.values.forEach(function(value) {
+                query.query.bool.should.push({
+                  "term": {
+                    "state": value
+                  }
+                });
+              });
               break;
             default :
               break;
