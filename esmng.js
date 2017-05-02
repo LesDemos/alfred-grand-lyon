@@ -19,6 +19,15 @@ function add_document (index, type, document, callback, id) {
     }, function(error, response) {
       callback(error, response);
     })
+  } else {
+    esdb.index({
+      index: index,
+      type: type,
+      body: document,
+      id : id
+    }, function(error, response) {
+      callback(error, response);
+    })
   }
 }
 
