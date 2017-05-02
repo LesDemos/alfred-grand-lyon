@@ -129,13 +129,13 @@ function get_reports_filtered(request, res, type_platform) {
   }
 }
 
-function change_state(request, res) {
+function change_state(request, res, type_platform) {
   try {
     if (request.request_id) {
       let query = {"query": {"term": {
         "request_id" : request.request_id
       }}};
-      esmng.search_document(INDEX_REQUEST, TYPE_FACEBOOK, query, function (hits) {
+      esmng.search_document(INDEX_REQUEST, type_platform, query, function (hits) {
         let reports = [];
         if (hits.length != 0) {
           hits.forEach(function (hit) {
@@ -145,7 +145,7 @@ function change_state(request, res) {
         let new_state = table_state[reports[0].state];
         if(new_state != null) {
           reports[0].state = new_state;
-          esmng.add_document(INDEX_REQUEST, TYPE_FACEBOOK, reports[0], function (error, response) {
+          esmng.add_document(INDEX_REQUEST, type_platform, reports[0], function (error, response) {
             if (error) {
               res.status(500).send("The report couldn't be saved : " + error.message);
             } else {
