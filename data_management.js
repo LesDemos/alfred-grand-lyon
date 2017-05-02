@@ -6,7 +6,6 @@ const uuidV1 = require('uuid/v1');
 // ES variables
 const INDEX_REQUEST = 'request';
 const INDEX_HASHTAGS = 'syntax_tree';
-const TYPE_FACEBOOK = 'facebook';
 const FIRST_HASHTAG = 'Origine';
 const UNTREATED = 'Untreated';
 const IN_PROGRESS = 'In progress';
@@ -25,7 +24,7 @@ This function save the request into the ES server. The only parameters contains 
 and the hashtags. The date and the request_id are automatically generated.
  */
 
-function save_request(request, res) {
+function save_request(request, res, type_platform) {
   try {
       if (request.hasOwnProperty('user_id') && request.hasOwnProperty('image') && request.hasOwnProperty('position') &&
       request.hasOwnProperty('hashtags')) {
@@ -35,7 +34,7 @@ function save_request(request, res) {
       request.date = actual_date;
       request.technician_id = "";
       request.state = "Untreated";
-      esmng.add_document(INDEX_REQUEST, TYPE_FACEBOOK, request, function (error, response) {
+      esmng.add_document(INDEX_REQUEST, type_platform, request, function (error, response) {
         if (error) {
           res.status(500).send("The report couldn't be saved : " + error.message);
         } else {
@@ -52,7 +51,7 @@ function save_request(request, res) {
 
 /* This function retrieve all of the reports within the filter provided*/
 
-function get_reports_filtered(request, res) {
+function get_reports_filtered(request, res, type_platform) {
   let query = {"query": {}};
   try {
     let filters = request.filters;
@@ -112,7 +111,7 @@ function get_reports_filtered(request, res) {
           }
         });
       }
-    esmng.search_document(INDEX_REQUEST, TYPE_FACEBOOK, query, function (hits) {
+    esmng.search_document(INDEX_REQUEST, type_platform, query, function (hits) {
       let reports = [];
       if (hits.length != 0) {
         hits.forEach(function (hit) {
@@ -196,14 +195,14 @@ function toGeoJSON(hits, request) {
 }
 
 /* The hashtags associated with the parameter are retrieved from the ES Server and returned. */
-function get_next_hashtags(hashtag, res) {
+function get_next_hashtags(hashtag, res, type_platform) {
   if(hashtag === '') {
     hashtag = FIRST_HASHTAG;
   }
   let query =  {
     match: { "name": hashtag }
   };
-  esmng.search_document(INDEX_HASHTAGS, TYPE_FACEBOOK, query, function (hit) {
+  esmng.search_document(INDEX_HASHTAGS, type_platform, query, function (hit) {
     console.log(hit.length);
     if (hit.length != 0) {
       let hashtags = { hashtags : [] };
