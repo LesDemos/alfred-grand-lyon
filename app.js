@@ -60,6 +60,11 @@ app.post('/api/reports/state', (req, res) => {
   data_mng.change_state(request, res, TYPE_FACEBOOK);
 });
 
+app.get('/api/reports/', (req, res) => {
+  let request = req.body;
+data_mng.change_state(request, res, TYPE_FACEBOOK);
+});
+
 app.get('/api/user', (req, res) => {
   let user_id = req.query.user_id;
   if(user_id) {
