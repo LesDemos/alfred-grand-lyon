@@ -228,6 +228,7 @@ function toGeoJSON(hits, request) {
   hits.forEach(function (hit) {
     let properties = {
       "user_id": hit.user_id,
+      "username": hit.username,
       "request_id": hit.request_id,
       "date": hit.date,
       "hashtags": hit.hashtags,
