@@ -168,12 +168,10 @@ function change_state(request, res, type_platform, callback) {
             break;
           case DONE :
             if(request.image_final) {
-              let actual_date = new Date();
               reports[0].image_final = request.image_final;
-              reports[0].date_final = actual_date;
-            } else {
-              callback(new Error("The final image is missing"), res);
-            }
+            } 
+            let actual_date = new Date();
+            reports[0].date_final = actual_date;
             break;
           default :
             break;
