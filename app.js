@@ -21,6 +21,7 @@ const PORT =  process.env.PORT;
 // Express
 const app = express();
 app.use('/api/static', express.static(__dirname + '/lib/map'));
+app.use('/api/static/admin', express.static(__dirname + '/admin'));
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 app.use(cors());
@@ -55,6 +56,10 @@ app.get('/api/hashtags', (req, res) => {
 
 app.get('/api/map', (req, res) => {
   res.sendFile(path.join(__dirname+'/lib/map/map.html'));
+});
+
+app.get('/admin', (req, res) => {
+  res.sendFile(path.join(__dirname+'/admin/index.html'));
 });
 
 app.post('/api/reports', (req, res) => {
