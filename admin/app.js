@@ -10,6 +10,8 @@ var mapLayerGroups = [];
 /* Control layer */
 var overlayMaps;
 
+var mapInit = false;
+
 const UNTREATED = 'Untreated';
 const IN_PROGRESS = 'In progress';
 const DONE = 'Done';
@@ -39,51 +41,71 @@ retrieveReports(filter, getTheListMan, getTheListManTwitter);
 /* Map loading, with a first filter */
 $('#mapButton').mouseup( function () {
 
-  setTimeout(function(){
-    mymap = L.map('mapId').setView([45.750000, 4.850000], 13);
+  if(mapInit == false)
+  {
+    mapInit = true;
 
-    var legend = L.control({position: 'bottomright'});
+    setTimeout(function(){
+      mymap = L.map('mapId').setView([45.750000, 4.850000], 13);
 
-    legend.onAdd = function (map) {
+      var legend = L.control({position: 'bottomright'});
 
-      var div = L.DomUtil.create('div', 'info legend');
+      legend.onAdd = function (map) {
 
-      div.innerHTML =
-      '<img src="static/admin/resources/State_Untreated_icon.png" alt="Untreated" style="width:20px;height:20px;">' + '<span>' + table_state[UNTREATED] + '</span>' + '<br>' +
-      '<img src="static/admin/resources/State_In_Progress_icon.png" alt="In progress" style="width:20px;height:20px;">' + '<span>' + table_state[IN_PROGRESS] + '</span>';
-      return div;
-    };
+        var div = L.DomUtil.create('div', 'info legend');
 
-    legend.addTo(mymap);
+        div.innerHTML =
+        '<img src="static/admin/resources/State_Untreated_icon.png" alt="Untreated" style="width:20px;height:20px;">' + '<span>' + table_state[UNTREATED] + '</span>' + '<br>' +
+        '<img src="static/admin/resources/State_In_Progress_icon.png" alt="In progress" style="width:20px;height:20px;">' + '<span>' + table_state[IN_PROGRESS] + '</span>';
+        return div;
+      };
 
-    L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
-      attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
-      maxZoom: 18,
-      id: 'mapbox.streets',
-      accessToken: window.Viz.access_token
-    }).addTo(mymap);
-    /* We take the data of the last week */
-    let now = new Date();
-    let before = new Date();
-    before.setDate(now.getDate()-7);
-    let filter = {
-      filters : [{
-        type : "time_range",
-        from : before.toString(),
-        to : now.toString()
-      }, {
-        type : "state",
-        values : ["Untreated", "In progress"]
-      }],
-      full : true
-    };
-    retrieveReports(filter, addDataFb, addDataTwitter);
-  }, 500);
+      legend.addTo(mymap);
+
+      L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+        attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+        maxZoom: 18,
+        id: 'mapbox.streets',
+        accessToken: window.Viz.access_token
+      }).addTo(mymap);
+      /* We take the data of the last week */
+      let now = new Date();
+      let before = new Date();
+      before.setDate(now.getDate()-7);
+      let filter = {
+        filters : [{
+          type : "time_range",
+          from : before.toString(),
+          to : now.toString()
+        }, {
+          type : "state",
+          values : ["Untreated", "In progress"]
+        }],
+        full : true
+      };
+      retrieveReports(filter, addDataFb, addDataTwitter);
+    }, 500);
+}
 });
 
 
 function SubForm(featureNum){
   var url="https://alfred-grand-lyon.herokuapp.com/api/reports/state",
+  data=$("#"+featureNum+"Form").serialize();
+  console.log(data);
+  $.ajax({
+    url:url,
+    type:'post',
+    data:data,
+    success:function(){
+      console.log("Submitted");
+      setTimeout(function(){location.reload();}, 500);
+    }
+  });
+}
+
+function SubFormTwitter(featureNum){
+  var url="https://alfred-grand-lyon.herokuapp.com/api/reports/twitter/state",
   data=$("#"+featureNum+"Form").serialize();
   console.log(data);
   $.ajax({
@@ -292,7 +314,7 @@ function getTheListManTwitter(data, onClick) {
 
         if(feature.properties.state == UNTREATED)
         {
-          popup_text = popup_text + '<form id="feature'+getTheListMan.counter+'Form" action="https://alfred-grand-lyon.herokuapp.com/api/reports/state" method="post">' +
+          popup_text = popup_text + '<form id="feature'+getTheListMan.counter+'Form" action="https://alfred-grand-lyon.herokuapp.com/api/reports/twitter/state" method="post">' +
           '<input type="text" name="request_id" id="request_id" value="' + feature.properties.request_id + '" hidden=true/>' +
           '<input type="text" name="technician_id" id="technician_id" value="58" hidden=true/>' +
           '</form>' +
