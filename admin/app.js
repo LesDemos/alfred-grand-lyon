@@ -55,6 +55,22 @@ $('#mapButton').mouseup( function () {
 });
 
 
+function SubForm(featureNum){
+  var url="https://alfred-grand-lyon.herokuapp.com/api/reports/state",
+  data=$("#"+featureNum+"Form").serialize();
+  console.log(data);
+  $.ajax({
+    url:url,
+    type:'post',
+    data:data,
+    success:function(){
+          console.log("Submitted");
+          setTimeout(function(){location.reload();}, 500);
+         }
+       });
+}
+
+
 /* Retrieves reports corresponding to a filter provided */
 function retrieveReports(query, callback) {
   mapLayerGroups = [];
@@ -119,13 +135,17 @@ function getTheListMan(data, onClick)
 
         /* We add the report hashtags */
         feature.properties.hashtags.forEach(function(hashtag){
-          popup_text = popup_text + '<span class="title">' + hashtag + ' </span>';
+          popup_text = popup_text + '<span class="title">#' + hashtag + ' </span>';
         });
         popup_text = popup_text + '<p>Etat : ' + feature.properties.state +'</br></p>' +
         '</div>' +
         '</div>' +
         '<div class="card-action center-align">' +
-        '<button type"submit" class="waves-effect wavves-light btn-large buttonCard">Affecter un technicien</button>' +
+        '<form id="feature'+getTheListMan.counter+'Form" action="https://alfred-grand-lyon.herokuapp.com/api/reports/state" method="post">' +
+        '<input type="text" name="request_id" id="request_id" value="' + feature.properties.request_id + '" hidden=true/>' +
+        '<input type="text" name="technician_id" id="technician_id" value="58" hidden=true/>' +
+        '</form>' +
+        '<button '+ (feature.properties.state=="Untreated"?"":"disabled") +' onClick="SubForm(\'feature'+getTheListMan.counter+'\')" class="waves-effect waves-light btn-large buttonCard">Affecter un technicien</button>' +
         '</div>' +
         '</div>' +
         '</div>' +
@@ -133,8 +153,6 @@ function getTheListMan(data, onClick)
 
         var y = getTheListMan.counter + 1;
 
-        popup_text = popup_text + '</div>';
-        console.log(getTheListMan.counter);
         $('#feature'+getTheListMan.counter).html(popup_text);
         $('#feature'+getTheListMan.counter).after('</li><li id=feature' + y + '>');
 
@@ -153,16 +171,31 @@ function addData(data, onClick) {
   /* Add the control layer to the map */
   overlayMaps = L.control.layers(undefined, overlayMaps).addTo(mymap);
 
-  let myIcon = L.icon({
-    iconUrl: 'resources/fix-icon.png',
-    iconSize: [50, 50],
-    popupAnchor: [10, -20],
-  });
+  let pre_icon = {
+    iconUrl: '',
+    iconSize: [30, 30],
+    popupAnchor: [5, -20],
+  };
 
   /* Add the data to the map */
   L.geoJSON(data,{
     onEachFeature: onEachFeature,
     pointToLayer: function (feature, latlng) {
+      let myIcon;
+      switch(feature.properties.state) {
+        case "In progress" :
+        pre_icon.iconUrl = 'resources/State_In_Progress_icon.png';
+        myIcon = L.icon(pre_icon);
+        break;
+        case "Done" :
+        pre_icon.iconUrl = 'resources/State_Done_icon.png';
+        myIcon= L.icon(pre_icon);
+        break;
+        default :
+        pre_icon.iconUrl = 'resources/State_Untreated_icon.png';
+        myIcon= L.icon(pre_icon);
+        break;
+      }
       return L.marker(latlng, {icon: myIcon});
     }
   }).on("click", onClick);

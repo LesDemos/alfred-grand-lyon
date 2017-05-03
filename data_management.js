@@ -26,7 +26,7 @@ and the hashtags. The date and the request_id are automatically generated.
 
 function save_request(request, res, type_platform) {
   try {
-      console.log(request);
+      //console.log(request);
       if (request.hasOwnProperty('user_id') && request.hasOwnProperty('image') && request.hasOwnProperty('position') &&
       request.hasOwnProperty('hashtags')) {
       let key = uuidV1();
@@ -64,8 +64,22 @@ function get_reports_filtered(request, res, type_platform) {
             "match_all": {}
         };
       } else {
+        query.query = {"bool" : { 
+                            "must" : [
+                              {
+                                "bool": {
+                                  "should": []
+                                }
+                              },
+                              {
+                                "bool": {
+                                  "should": []
+                                }
+                              }
+                            ]
+                              }
+                      };
         filters.forEach(function (filter) {
-          query.query = {"bool" : { "must" : [], "should" : []}};
           switch(filter.type) {
             case 'time_range' :
               if(filter.from) {
@@ -111,10 +125,17 @@ function get_reports_filtered(request, res, type_platform) {
               });
               break;
             case 'hashtags' :
+              filter.hashtags.forEach(function(hashtag) {
+                query.query.bool.must[1].bool.should.push({
+                  "term": {
+                    "hashtags": hashtag
+                  }
+                });
+              });
               break;
             case 'state' :
               filter.values.forEach(function(value) {
-                query.query.bool.should.push({
+                query.query.bool.must[0].bool.should.push({
                   "term": {
                     "state": value
                   }
@@ -126,7 +147,7 @@ function get_reports_filtered(request, res, type_platform) {
           }
         });
       }
-    let sort = "request_id:asc";
+    let sort = "date:desc";
     esmng.search_document(INDEX_REQUEST, type_platform, query, sort, function (hits) {
       let reports = [];
       if (hits.length != 0) {
@@ -150,7 +171,7 @@ function change_state(request, res, type_platform, callback) {
     let query = {"query": {"term": {
       "request_id" : request.request_id
     }}};
-    let sort = "request_id:asc";
+    let sort = "date:desc";
     esmng.search_document(INDEX_REQUEST, type_platform, query, sort, function (hits) {
       let reports = [];
       if (hits.length != 0) {
@@ -160,9 +181,9 @@ function change_state(request, res, type_platform, callback) {
       }
       let new_state = table_state[reports[0].state];
       if(new_state != null) {
+        reports[0].state = new_state;
         switch(new_state) {
           case IN_PROGRESS :
-            reports[0].state = new_state;
             if(request.technician_id) {
               reports[0].technician_id = request.technician_id;
             } else {
