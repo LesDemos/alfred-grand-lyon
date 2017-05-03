@@ -31,7 +31,7 @@ function add_document (index, type, document, callback, id) {
   }
 }
 
-function search_document (index, type, query, callback) {
+function search_document (index, type, query, sort, callback) {
   let document = null;
   console.log(JSON.stringify(query));
   esdb.search({
@@ -41,7 +41,8 @@ function search_document (index, type, query, callback) {
     size : 50,
     body: {
       query: query
-    }
+    },
+    sort: sort
   },function (error, response, status) {
     if (error){
       console.log("search error: "+error)

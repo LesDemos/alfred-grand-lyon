@@ -26,6 +26,7 @@ and the hashtags. The date and the request_id are automatically generated.
 
 function save_request(request, res, type_platform) {
   try {
+      //console.log(request);
       if (request.hasOwnProperty('user_id') && request.hasOwnProperty('image') && request.hasOwnProperty('position') &&
       request.hasOwnProperty('hashtags')) {
       let key = uuidV1();
@@ -89,11 +90,23 @@ function get_reports_filtered(request, res, type_platform) {
               }
               break;
             case 'user_id' :
+              query.query.bool.must.push({
+                "term": {
+                  "user_id": filter.user_id
+                }
+              });
               break;
             case 'request_id' :
               query.query.bool.must.push({
                 "term": {
                   "request_id": filter.request_id
+                }
+              });
+              break;
+            case 'technician_id' :
+              query.query.bool.must.push({
+                "term": {
+                  "technician_id": filter.technician_id
                 }
               });
               break;
@@ -113,7 +126,8 @@ function get_reports_filtered(request, res, type_platform) {
           }
         });
       }
-    esmng.search_document(INDEX_REQUEST, type_platform, query, function (hits) {
+    let sort = "request_id:asc";
+    esmng.search_document(INDEX_REQUEST, type_platform, query, sort, function (hits) {
       let reports = [];
       if (hits.length != 0) {
         hits.forEach(function (hit) {
@@ -131,39 +145,58 @@ function get_reports_filtered(request, res, type_platform) {
   }
 }
 
-function change_state(request, res, type_platform) {
-  try {
-    if (request.request_id) {
-      let query = {"query": {"term": {
-        "request_id" : request.request_id
-      }}};
-      esmng.search_document(INDEX_REQUEST, type_platform, query, function (hits) {
-        let reports = [];
-        if (hits.length != 0) {
-          hits.forEach(function (hit) {
-            reports.push(hit._source);
-          });
+function change_state(request, res, type_platform, callback) {
+  if (request.request_id) {
+    let query = {"query": {"term": {
+      "request_id" : request.request_id
+    }}};
+    let sort = "request_id:asc";
+    esmng.search_document(INDEX_REQUEST, type_platform, query, sort, function (hits) {
+      let reports = [];
+      if (hits.length != 0) {
+        hits.forEach(function (hit) {
+          reports.push(hit._source);
+        });
+      }
+      let new_state = table_state[reports[0].state];
+      if(new_state != null) {
+        switch(new_state) {
+          case IN_PROGRESS :
+            reports[0].state = new_state;
+            if(request.technician_id) {
+              reports[0].technician_id = request.technician_id;
+            } else {
+               callback(new Error("The technician id is missing"), res);
+            }
+            break;
+          case DONE :
+            if(request.image_final) {
+              reports[0].image_final = request.image_final;
+            } 
+            let actual_date = new Date();
+            reports[0].date_final = actual_date;
+            break;
+          default :
+            break;
         }
-        let new_state = table_state[reports[0].state];
-        if(new_state != null) {
-          reports[0].state = new_state;
           esmng.add_document(INDEX_REQUEST, type_platform, reports[0], function (error, response) {
             if (error) {
-              res.status(500).send("The report couldn't be saved : " + error.message);
+              callback(new Error("The report couldn't be saved : " + error.message), res);
             } else {
-              res.json(reports[0]);
+              callback(null, res, reports[0]);
             }
           }, hits[0]._id);
-        } else {
-          throw new Error("The state isn't correct");
-        }
-      });
-    } else {
-      throw new Error("The request id parameter is missing");
-    }
-  } catch (e) {
-    res.status(500).send(e.message);
+      } else {
+        callback(new Error("The state isn't correct"), res);
+      }
+    });
+  } else {
+    callback(new Error("The request id parameter is missing"), res);
   }
+}
+  
+function sendFinalReport(reports, res){
+  
 }
 
 function toGeoJSON(hits, request) {
@@ -181,7 +214,7 @@ function toGeoJSON(hits, request) {
       "technician_id": hit.technician_id,
       "date_final": hit.date_final
     };
-    if(request.full == true) {
+    if(request.full != false) {
       properties.image = hit.image;
       properties.image_final = hit.image_final;
     }
@@ -206,7 +239,7 @@ function get_next_hashtags(hashtag, res, type_platform) {
   let query =  {
     match: { "name": hashtag }
   };
-  esmng.search_document(INDEX_HASHTAGS, type_platform, query, function (hit) {
+  esmng.search_document(INDEX_HASHTAGS, type_platform, query, "", function (hit) {
     console.log(hit.length);
     if (hit.length != 0) {
       let hashtags = { hashtags : [] };

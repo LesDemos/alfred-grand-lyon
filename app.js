@@ -12,6 +12,9 @@ const data_mng = require('./data_management.js');
 // FB ChatBot
 const fbBot = require('./fb-chatbot.js');
 
+//TwitBot
+const TwitBot = require('./lib/twitter/twitter-bot.js');
+
 // Environment variables
 const PORT =  process.env.PORT;
 
@@ -26,6 +29,7 @@ app.use('/bot/fb', fbBot.botly.router());
 
 // Constantes
 const TYPE_FACEBOOK = 'facebook';
+const TYPE_TWITTER = 'twitter';
 
 app.get('/', function(req, res) {
   console.log('Received request on /');
@@ -35,6 +39,11 @@ app.get('/', function(req, res) {
 app.post('/api/request/fb', (req, res) => {
   let request = req.body;
   data_mng.save_request(request, res, TYPE_FACEBOOK);
+});
+
+app.post('/api/request/twitter', (req, res) => {
+  let request = req.body;
+  data_mng.save_request(request, res, TYPE_TWITTER);
 });
 
 app.get('/api/hashtags', (req, res) => {
@@ -57,12 +66,12 @@ app.post('/api/reports', (req, res) => {
 
 app.post('/api/reports/state', (req, res) => {
   let request = req.body;
-  data_mng.change_state(request, res, TYPE_FACEBOOK);
+  data_mng.change_state(request, res, TYPE_FACEBOOK, sendResponse);
 });
 
 app.get('/api/reports/', (req, res) => {
-  let request = req.body;
-data_mng.change_state(request, res, TYPE_FACEBOOK);
+let request = {filters : []};
+data_mng.get_reports_filtered(request, res, TYPE_FACEBOOK);
 });
 
 app.get('/api/user', (req, res) => {
@@ -79,6 +88,9 @@ app.get('/api/user', (req, res) => {
   }
 });
 
+var twitBot = new TwitBot('Epakza');
+twitBot.run();
+
 /* Example of data to provide to the route /api/request */
 app.get('/api/request/fb', (req, res) => {
   let request = {
@@ -93,6 +105,14 @@ app.get('/api/request/fb', (req, res) => {
   data_mng.save_request(request);
   res.send("Request processed");
 });
+
+function sendResponse(err, res, req) {
+  if(err != null) {
+    res.status(500).send(err.message);
+  } else {
+    res.json(req);
+  }
+}
 
 app.listen(PORT, function() {
   console.log('Listening on port ' + PORT);
