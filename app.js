@@ -32,7 +32,7 @@ app.use('/bot/fb', fbBot.botly.router());
 const TYPE_FACEBOOK = 'facebook';
 const TYPE_TWITTER = 'twitter';
 
-var twitBot = new TwitBot('Epakza');
+var twitBot = new TwitBot('AlfredGrandLyon');
 twitBot.run();
 
 app.get('/', function(req, res) {
