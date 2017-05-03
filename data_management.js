@@ -33,6 +33,8 @@ function save_request(request, res, type_platform) {
       request.request_id = key;
       request.date = actual_date;
       request.technician_id = "";
+      request.image_final = null;
+      request.date_final = null;
       request.state = "Untreated";
       esmng.add_document(INDEX_REQUEST, type_platform, request, function (error, response) {
         if (error) {
@@ -87,11 +89,23 @@ function get_reports_filtered(request, res, type_platform) {
               }
               break;
             case 'user_id' :
+              query.query.bool.must.push({
+                "term": {
+                  "user_id": filter.user_id
+                }
+              });
               break;
             case 'request_id' :
               query.query.bool.must.push({
                 "term": {
                   "request_id": filter.request_id
+                }
+              });
+              break;
+            case 'technician_id' :
+              query.query.bool.must.push({
+                "term": {
+                  "technician_id": filter.technician_id
                 }
               });
               break;
@@ -129,39 +143,59 @@ function get_reports_filtered(request, res, type_platform) {
   }
 }
 
-function change_state(request, res, type_platform) {
-  try {
-    if (request.request_id) {
-      let query = {"query": {"term": {
-        "request_id" : request.request_id
-      }}};
-      esmng.search_document(INDEX_REQUEST, type_platform, query, function (hits) {
-        let reports = [];
-        if (hits.length != 0) {
-          hits.forEach(function (hit) {
-            reports.push(hit._source);
-          });
+function change_state(request, res, type_platform, callback) {
+  if (request.request_id) {
+    let query = {"query": {"term": {
+      "request_id" : request.request_id
+    }}};
+    esmng.search_document(INDEX_REQUEST, type_platform, query, function (hits) {
+      let reports = [];
+      if (hits.length != 0) {
+        hits.forEach(function (hit) {
+          reports.push(hit._source);
+        });
+      }
+      let new_state = table_state[reports[0].state];
+      if(new_state != null) {
+        switch(new_state) {
+          case IN_PROGRESS :
+            reports[0].state = new_state;
+            if(request.technician_id) {
+              reports[0].technician_id = request.technician_id;
+            } else {
+               callback(new Error("The technician id is missing"), res);
+            }
+            break;
+          case DONE :
+            if(request.image_final) {
+              let actual_date = new Date();
+              reports[0].image_final = request.image_final;
+              reports[0].date_final = actual_date;
+            } else {
+              callback(new Error("The final image is missing"), res);
+            }
+            break;
+          default :
+            break;
         }
-        let new_state = table_state[reports[0].state];
-        if(new_state != null) {
-          reports[0].state = new_state;
           esmng.add_document(INDEX_REQUEST, type_platform, reports[0], function (error, response) {
             if (error) {
-              res.status(500).send("The report couldn't be saved : " + error.message);
+              callback(new Error("The report couldn't be saved : " + error.message), res);
             } else {
-              res.json(reports[0]);
+              callback(null, res, reports[0]);
             }
           }, hits[0]._id);
-        } else {
-          throw new Error("The state isn't correct");
-        }
-      });
-    } else {
-      throw new Error("The request id parameter is missing");
-    }
-  } catch (e) {
-    res.status(500).send(e.message);
+      } else {
+        callback(new Error("The state isn't correct"), res);
+      }
+    });
+  } else {
+    callback(new Error("The request id parameter is missing"), res);
   }
+}
+  
+function sendFinalReport(reports, res){
+  
 }
 
 function toGeoJSON(hits, request) {
@@ -176,10 +210,12 @@ function toGeoJSON(hits, request) {
       "date": hit.date,
       "hashtags": hit.hashtags,
       "state": hit.state,
-      "technician_id": hit.technician_id
+      "technician_id": hit.technician_id,
+      "date_final": hit.date_final
     };
-    if(request.full == true) {
+    if(request.full != false) {
       properties.image = hit.image;
+      properties.image_final = hit.image_final;
     }
     let coordinates = [hit.position.lon, hit.position.lat];
     geojson.features.push({

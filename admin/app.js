@@ -10,6 +10,20 @@ var mapLayerGroups = [];
 /* Control layer */
 var overlayMaps;
 
+let now = new Date();
+let before = new Date();
+before.setDate(now.getDate()-7);
+let filter = {
+  filters : [{
+    type : "time_range",
+    from : before.toString(),
+    to : now.toString()
+  }],
+  full : true
+}
+
+getTheListMan.counter = 0;
+retrieveReports(filter, getTheListMan);
 
 /* Map loading, with a first filter */
 $('#mapButton').mouseup( function () {
@@ -17,30 +31,27 @@ $('#mapButton').mouseup( function () {
   setTimeout(function(){
     mymap = L.map('mapId').setView([45.750000, 4.850000], 13);
 
-  L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
-    attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
-    maxZoom: 18,
-    id: 'mapbox.streets',
-    accessToken: window.Viz.access_token
-  }).addTo(mymap);
-  /* We take the data of the last week */
-  let now = new Date();
-  let before = new Date();
-  before.setDate(now.getDate()-7);
-  let filter = {
-    filters : [{
-      type : "time_range",
-      from : before.toString(),
-      to : now.toString()
-    }],
-    full : true
-  }
+    L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+      attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+      maxZoom: 18,
+      id: 'mapbox.streets',
+      accessToken: window.Viz.access_token
+    }).addTo(mymap);
+    /* We take the data of the last week */
+    let now = new Date();
+    let before = new Date();
+    before.setDate(now.getDate()-7);
+    let filter = {
+      filters : [{
+        type : "time_range",
+        from : before.toString(),
+        to : now.toString()
+      }],
+      full : true
+    }
 
-  retrieveReports(filter, addData);
-}, 500);
-
-  
-
+    retrieveReports(filter, addData);
+  }, 500);
 });
 
 
@@ -66,6 +77,75 @@ function retrieveReports(query, callback) {
   .catch(function(err) {
     console.log('Fetch Error :-S', err);
   });
+}
+
+function getTheListMan(data, onClick)
+{
+  $.each(data.features, function(i, feature) {
+    fetch(window.Viz.apiEndpoint + 'user?user_id=' + feature.properties.user_id, {
+      method: 'GET',
+      headers: {'Content-Type': 'application/json; charset=UTF-8'}
+    }).then(
+    function(response) {
+      if (response.status !== 200) {
+        console.log('Looks like there was a problem. Status Code: ' +
+          response.status);
+        return;
+      }
+      response.json().then(data => {
+
+        let date= new Date(feature.properties.date),
+        dformat = [date.getDate().padLeft(),
+        (date.getMonth()+1).padLeft(),
+        date.getFullYear()].join('/');
+
+        let popup_text = '<div class="">' +
+        '<div class="card horizontal">' +
+        '<div class="card-image">' +
+        '<img class="reportImage" src="' + feature.properties.image + '">' +
+        '</div>' +
+        '<div class="card-stacked">' +
+        '<div class="card-content">' +
+        '<ul class="collection">' +
+        '<li class="collection-item avatar">' +
+        '<img src=" '+ data.profile_pic + '" class="circle"/>' +
+        '<span class="title">' + data.last_name+ '</span>' +
+        '<p>' + data.first_name + '</br></p>' +
+        '</li>' +
+        '</ul>' +
+        '<div class="col">';
+
+
+
+        /* We add the report hashtags */
+        feature.properties.hashtags.forEach(function(hashtag){
+          popup_text = popup_text + '<span class="title">' + hashtag + ' </span>';
+        });
+        popup_text = popup_text + '<p>Etat : ' + feature.properties.state +'</br></p>' +
+        '</div>' +
+        '</div>' +
+        '<div class="card-action center-align">' +
+        '<button type"submit" class="waves-effect wavves-light btn-large buttonCard">Affecter un technicien</button>' +
+        '</div>' +
+        '</div>' +
+        '</div>' +
+        '</div>';
+
+        var y = getTheListMan.counter + 1;
+
+        popup_text = popup_text + '</div>';
+        console.log(getTheListMan.counter);
+        $('#feature'+getTheListMan.counter).html(popup_text);
+        $('#feature'+getTheListMan.counter).after('</li><li id=feature' + y + '>');
+
+        getTheListMan.counter = y;
+
+      });
+})
+.catch(function(err) {
+  console.log('Fetch Error :-S', err);
+});
+});
 }
 
 /* Add a GeoJSON file to the map, with a customized icon */
