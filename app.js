@@ -21,7 +21,7 @@ const PORT =  process.env.PORT;
 // Express
 const app = express();
 app.use('/api/static', express.static(__dirname + '/lib/map'));
-app.use('/api/static/admin', express.static(__dirname + '/admin'));
+app.use('/static/admin', express.static(__dirname + '/admin'));
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 app.use(cors());

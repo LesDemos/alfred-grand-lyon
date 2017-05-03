@@ -48,8 +48,8 @@ $('#mapButton').mouseup( function () {
       var div = L.DomUtil.create('div', 'info legend');
 
       div.innerHTML =
-      '<img src="resources/State_Untreated_icon.png" alt="Untreated" style="width:20px;height:20px;">' + '<span>' + table_state[UNTREATED] + '</span>' + '<br>' +
-      '<img src="resources/State_In_Progress_icon.png" alt="In progress" style="width:20px;height:20px;">' + '<span>' + table_state[IN_PROGRESS] + '</span>';
+      '<img src="static/admin/resources/State_Untreated_icon.png" alt="Untreated" style="width:20px;height:20px;">' + '<span>' + table_state[UNTREATED] + '</span>' + '<br>' +
+      '<img src="static/admin/resources/State_In_Progress_icon.png" alt="In progress" style="width:20px;height:20px;">' + '<span>' + table_state[IN_PROGRESS] + '</span>';
       return div;
     };
 
@@ -149,15 +149,15 @@ function getTheListMan(data, onClick)
 
         if(feature.properties.state == UNTREATED)
         {
-          popup_text = popup_text + '<img class="stateIcon" src="resources/State_Untreated_icon.png"/>';
+          popup_text = popup_text + '<img class="stateIcon" src="static/admin/resources/State_Untreated_icon.png"/>';
         }
         else if (feature.properties.state == IN_PROGRESS)
         {
-          popup_text = popup_text + '<img class="stateIcon" src="resources/State_In_Progress_icon.png"/>';
+          popup_text = popup_text + '<img class="stateIcon" src="static/admin/resources/State_In_Progress_icon.png"/>';
         }
         else
         {
-          popup_text = popup_text + '<img class="stateIcon" src="resources/State_Done_icon.png"/>';
+          popup_text = popup_text + '<img class="stateIcon" src="static/admin/resources/State_Done_icon.png"/>';
         }
 
 
@@ -260,15 +260,15 @@ function addData(data, onClick) {
       let myIcon;
       switch(feature.properties.state) {
         case IN_PROGRESS :
-        pre_icon.iconUrl = 'resources/State_In_Progress_icon.png';
+        pre_icon.iconUrl = 'static/admin/resources/State_In_Progress_icon.png';
         myIcon = L.icon(pre_icon);
         break;
         case DONE :
-        pre_icon.iconUrl = 'resources/State_Done_icon.png';
+        pre_icon.iconUrl = 'static/admin/resources/State_Done_icon.png';
         myIcon= L.icon(pre_icon);
         break;
         default :
-        pre_icon.iconUrl = 'resources/State_Untreated_icon.png';
+        pre_icon.iconUrl = 'static/admin/resources/State_Untreated_icon.png';
         myIcon= L.icon(pre_icon);
         break;
       }
