@@ -64,8 +64,22 @@ function get_reports_filtered(request, res, type_platform) {
             "match_all": {}
         };
       } else {
+        query.query = {"bool" : { 
+                            "must" : [
+                              {
+                                "bool": {
+                                  "should": []
+                                }
+                              },
+                              {
+                                "bool": {
+                                  "should": []
+                                }
+                              }
+                            ]
+                              }
+                      };
         filters.forEach(function (filter) {
-          query.query = {"bool" : { "must" : [], "should" : []}};
           switch(filter.type) {
             case 'time_range' :
               if(filter.from) {
@@ -111,10 +125,17 @@ function get_reports_filtered(request, res, type_platform) {
               });
               break;
             case 'hashtags' :
+              filter.hashtags.forEach(function(hashtag) {
+                query.query.bool.must[1].bool.should.push({
+                  "term": {
+                    "hashtags": hashtag
+                  }
+                });
+              });
               break;
             case 'state' :
               filter.values.forEach(function(value) {
-                query.query.bool.should.push({
+                query.query.bool.must[0].bool.should.push({
                   "term": {
                     "state": value
                   }
