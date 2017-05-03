@@ -33,6 +33,8 @@ function save_request(request, res, type_platform) {
       request.request_id = key;
       request.date = actual_date;
       request.technician_id = "";
+      request.image_final = null;
+      request.date_final = null;
       request.state = "Untreated";
       esmng.add_document(INDEX_REQUEST, type_platform, request, function (error, response) {
         if (error) {
@@ -177,9 +179,11 @@ function toGeoJSON(hits, request) {
       "hashtags": hit.hashtags,
       "state": hit.state,
       "technician_id": hit.technician_id
+      "date_final": hit.date_final
     };
     if(request.full == true) {
       properties.image = hit.image;
+      properties.image_final = hit.image_final;
     }
     let coordinates = [hit.position.lon, hit.position.lat];
     geojson.features.push({
