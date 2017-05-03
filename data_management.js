@@ -125,7 +125,8 @@ function get_reports_filtered(request, res, type_platform) {
           }
         });
       }
-    esmng.search_document(INDEX_REQUEST, type_platform, query, function (hits) {
+    let sort = "request_id:asc";
+    esmng.search_document(INDEX_REQUEST, type_platform, query, sort, function (hits) {
       let reports = [];
       if (hits.length != 0) {
         hits.forEach(function (hit) {
@@ -148,7 +149,8 @@ function change_state(request, res, type_platform, callback) {
     let query = {"query": {"term": {
       "request_id" : request.request_id
     }}};
-    esmng.search_document(INDEX_REQUEST, type_platform, query, function (hits) {
+    let sort = "request_id:asc";
+    esmng.search_document(INDEX_REQUEST, type_platform, query, sort, function (hits) {
       let reports = [];
       if (hits.length != 0) {
         hits.forEach(function (hit) {
@@ -236,7 +238,7 @@ function get_next_hashtags(hashtag, res, type_platform) {
   let query =  {
     match: { "name": hashtag }
   };
-  esmng.search_document(INDEX_HASHTAGS, type_platform, query, function (hit) {
+  esmng.search_document(INDEX_HASHTAGS, type_platform, query, "", function (hit) {
     console.log(hit.length);
     if (hit.length != 0) {
       let hashtags = { hashtags : [] };
