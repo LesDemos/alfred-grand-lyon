@@ -31,6 +31,20 @@ $('#mapButton').mouseup( function () {
   setTimeout(function(){
     mymap = L.map('mapId').setView([45.750000, 4.850000], 13);
 
+    var legend = L.control({position: 'bottomright'});
+
+    legend.onAdd = function (map) {
+
+      var div = L.DomUtil.create('div', 'info legend');
+
+      div.innerHTML =
+      '<img src="resources/State_Untreated_icon.png" alt="Untreated" style="width:20px;height:20px;">' + '<span>' + "Untreated" + '</span>' + '<br>' +
+      '<img src="resources/State_In_Progress_icon.png" alt="In progress" style="width:20px;height:20px;">' + '<span>' + "In progress" + '</span>';
+      return div;
+    };
+
+    legend.addTo(mymap);
+
     L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
       attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
       maxZoom: 18,
@@ -46,10 +60,12 @@ $('#mapButton').mouseup( function () {
         type : "time_range",
         from : before.toString(),
         to : now.toString()
+      }, {
+        type : "state",
+        values : ["Untreated", "In progress"]
       }],
       full : true
     }
-
     retrieveReports(filter, addData);
   }, 500);
 });
@@ -64,12 +80,133 @@ function SubForm(featureNum){
     type:'post',
     data:data,
     success:function(){
-          console.log("Submitted");
-          setTimeout(function(){location.reload();}, 500);
-         }
-       });
+      console.log("Submitted");
+      setTimeout(function(){location.reload();}, 500);
+    }
+  });
 }
 
+function getTheListMan(data, onClick)
+{
+  $.each(data.features, function(i, feature) {
+    fetch(window.Viz.apiEndpoint + 'user?user_id=' + feature.properties.user_id, {
+      method: 'GET',
+      headers: {'Content-Type': 'application/json; charset=UTF-8'}
+    }).then(
+    function(response) {
+      if (response.status !== 200) {
+        console.log('Looks like there was a problem. Status Code: ' +
+          response.status);
+        return;
+      }
+      response.json().then(data => {
+
+        let date= new Date(feature.properties.date),
+        dformat = [date.getDate().padLeft(),
+        (date.getMonth()+1).padLeft(),
+        date.getFullYear()].join('/');
+
+        let date_final= new Date(feature.properties.date_final),
+        dformat2 = [date_final.getDate().padLeft(),
+        (date_final.getMonth()+1).padLeft(),
+        date_final.getFullYear()].join('/');
+
+        let popup_text = '<div class="">' +
+        '<div class="card horizontal">' +
+        '<div class="card-image">' +
+        '<img class="reportImage" src="' + feature.properties.image + '">' +
+        '</div>' +
+        '<div class="card-stacked">' +
+        '<div class="card-content">' +
+        '<ul class="collection">' +
+        '<li class="collection-item avatar">' +
+        '<img src=" '+ data.profile_pic + '" class="circle"/>' +
+        '<span class="title">' + data.last_name+ '</span>' +
+        '<p>' + data.first_name + '</br></p>' +
+        '<p>' + dformat + ((feature.properties.date_final!=null) ? " - " + dformat2 : "") + "</br></p>" +
+        '</li>' +
+        '</ul>' +
+        '<div class="col">' +
+        '<blockquote>';
+
+
+
+        /* We add the report hashtags */
+        feature.properties.hashtags.forEach(function(hashtag){
+          popup_text = popup_text + '<span class="chip">#' + hashtag + ' </span>';
+        });
+        popup_text = popup_text + '<p></br>';
+
+        if(feature.properties.state == "Untreated")
+        {
+          popup_text = popup_text + '<img class="stateIcon" src="resources/State_Untreated_icon.png"/>';
+        }
+        else if (feature.properties.state == "In progress")
+        {
+          popup_text = popup_text + '<img class="stateIcon" src="resources/State_In_Progress_icon.png"/>';
+        }
+        else
+        {
+          popup_text = popup_text + '<img class="stateIcon" src="resources/State_Done_icon.png"/>';
+        }
+
+
+        popup_text = popup_text + '  ' + feature.properties.state + '</br></p>' +
+        '</blockquote></div>' +
+        '</div>' +
+        '<div class="card-action center-align">';
+
+        if(feature.properties.state == "Untreated")
+        {
+          popup_text = popup_text + '<form id="feature'+getTheListMan.counter+'Form" action="https://alfred-grand-lyon.herokuapp.com/api/reports/state" method="post">' +
+          '<input type="text" name="request_id" id="request_id" value="' + feature.properties.request_id + '" hidden=true/>' +
+          '<input type="text" name="technician_id" id="technician_id" value="58" hidden=true/>' +
+          '</form>' +
+          '<button onClick="SubForm(\'feature'+getTheListMan.counter+'\')" class="waves-effect waves-light btn-large buttonCard">Affecter un technicien</button>';
+        }
+        else if (feature.properties.state == "In progress")
+        {
+          popup_text = popup_text + '<button disabled class="waves-effect waves-light btn-large buttonCard">Affecter un technicien</button>';
+        }
+        else
+        {
+          if(feature.properties.image_final != null)
+          {
+            popup_text = popup_text + '<a class="waves-effect waves-light btn-large" href="#modal1">Resultat de l\'intervention</a>' +
+            '<div id="modal1" class="modal">' +
+            '<div class="modal-content">' +
+            '<h4>Resultat de l\'intervention</h4>' +
+            '<img src="feature.properties.image_final"/>' +
+            '</div>' +
+            '</div>';
+          }
+          else
+          {
+            popup_text = popup_text + '<a disabled class="waves-effect waves-light btn-large" href="#modal1">Resultat de l\'intervention</a>';
+          }
+        }
+
+        popup_text = popup_text +
+        '</div>' +
+        '</div>' +
+        '</div>' +
+        '</div>';
+
+        var y = getTheListMan.counter + 1;
+
+        $('#feature'+getTheListMan.counter).html(popup_text);
+        $('.modal').modal();
+        $('#feature'+getTheListMan.counter).after('</li><li id=feature' + y + '>');
+
+        getTheListMan.counter = y;
+
+      });
+})
+.catch(function(err) {
+  console.log('Fetch Error :-S', err);
+});
+});
+}
 
 /* Retrieves reports corresponding to a filter provided */
 function retrieveReports(query, callback) {
@@ -95,77 +232,6 @@ function retrieveReports(query, callback) {
   });
 }
 
-function getTheListMan(data, onClick)
-{
-  $.each(data.features, function(i, feature) {
-    fetch(window.Viz.apiEndpoint + 'user?user_id=' + feature.properties.user_id, {
-      method: 'GET',
-      headers: {'Content-Type': 'application/json; charset=UTF-8'}
-    }).then(
-    function(response) {
-      if (response.status !== 200) {
-        console.log('Looks like there was a problem. Status Code: ' +
-          response.status);
-        return;
-      }
-      response.json().then(data => {
-
-        let date= new Date(feature.properties.date),
-        dformat = [date.getDate().padLeft(),
-        (date.getMonth()+1).padLeft(),
-        date.getFullYear()].join('/');
-
-        let popup_text = '<div class="">' +
-        '<div class="card horizontal">' +
-        '<div class="card-image">' +
-        '<img class="reportImage" src="' + feature.properties.image + '">' +
-        '</div>' +
-        '<div class="card-stacked">' +
-        '<div class="card-content">' +
-        '<ul class="collection">' +
-        '<li class="collection-item avatar">' +
-        '<img src=" '+ data.profile_pic + '" class="circle"/>' +
-        '<span class="title">' + data.last_name+ '</span>' +
-        '<p>' + data.first_name + '</br></p>' +
-        '</li>' +
-        '</ul>' +
-        '<div class="col">';
-
-
-
-        /* We add the report hashtags */
-        feature.properties.hashtags.forEach(function(hashtag){
-          popup_text = popup_text + '<span class="title">#' + hashtag + ' </span>';
-        });
-        popup_text = popup_text + '<p>Etat : ' + feature.properties.state +'</br></p>' +
-        '</div>' +
-        '</div>' +
-        '<div class="card-action center-align">' +
-        '<form id="feature'+getTheListMan.counter+'Form" action="https://alfred-grand-lyon.herokuapp.com/api/reports/state" method="post">' +
-        '<input type="text" name="request_id" id="request_id" value="' + feature.properties.request_id + '" hidden=true/>' +
-        '<input type="text" name="technician_id" id="technician_id" value="58" hidden=true/>' +
-        '</form>' +
-        '<button '+ (feature.properties.state=="Untreated"?"":"disabled") +' onClick="SubForm(\'feature'+getTheListMan.counter+'\')" class="waves-effect waves-light btn-large buttonCard">Affecter un technicien</button>' +
-        '</div>' +
-        '</div>' +
-        '</div>' +
-        '</div>';
-
-        var y = getTheListMan.counter + 1;
-
-        $('#feature'+getTheListMan.counter).html(popup_text);
-        $('#feature'+getTheListMan.counter).after('</li><li id=feature' + y + '>');
-
-        getTheListMan.counter = y;
-
-      });
-})
-.catch(function(err) {
-  console.log('Fetch Error :-S', err);
-});
-});
-}
-
 /* Add a GeoJSON file to the map, with a customized icon */
 function addData(data, onClick) {
   /* Add the control layer to the map */
@@ -173,7 +239,7 @@ function addData(data, onClick) {
 
   let pre_icon = {
     iconUrl: '',
-    iconSize: [30, 30],
+    iconSize: [25, 25],
     popupAnchor: [5, -20],
   };
 
@@ -288,3 +354,4 @@ Number.prototype.padLeft = function(base,chr){
   var  len = (String(base || 10).length - String(this).length)+1;
   return len > 0? new Array(len).join(chr || '0')+this : this;
 }
+
