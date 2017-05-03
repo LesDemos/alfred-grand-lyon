@@ -14,24 +14,24 @@ html, body, #app {
   overflow:hidden;
 }
 
-.fb-container{
+.fb-container, .tt-container{
   clear:left;
   float: left;
   overflow:hidden;
   width:140px;
 }
 
-.fb-informations {
+.fb-informations, .tt-informations {
   float: left;
   clear:left;
 }
 
-.fb-thumb {
+.fb-thumb, .tt-thumb {
   float: left!important;
   clear:left;
 }
 
-.fb-content {
+.fb-content, .tt-content {
   margin-left : 5px;
   float: left;
 }
@@ -42,7 +42,13 @@ html, body, #app {
   color: #525152;
 }
 
-.fb-subtitle {
+.tt-title  {
+  margin-bottom: 30px;
+  font-weight: 900;
+  color: #525152;
+}
+
+.fb-subtitle, .tt-subtitle {
   margin-bottom: 10px;
   font-weight: 600;
   color: #7f7e7f;
@@ -52,6 +58,12 @@ html, body, #app {
   font-weight: 500;
   color: #5f5e5f;
 }
+
+.tt-text {
+  font-weight: 500;
+  color: #5f5e5f;
+}
+
 
 .report-informations {
   clear:left;
