@@ -147,7 +147,7 @@ function get_reports_filtered(request, res, type_platform) {
           }
         });
       }
-    let sort = "request_id:asc";
+    let sort = "date:desc";
     esmng.search_document(INDEX_REQUEST, type_platform, query, sort, function (hits) {
       let reports = [];
       if (hits.length != 0) {
@@ -171,7 +171,7 @@ function change_state(request, res, type_platform, callback) {
     let query = {"query": {"term": {
       "request_id" : request.request_id
     }}};
-    let sort = "request_id:asc";
+    let sort = "date:desc";
     esmng.search_document(INDEX_REQUEST, type_platform, query, sort, function (hits) {
       let reports = [];
       if (hits.length != 0) {
