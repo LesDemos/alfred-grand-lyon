@@ -57,6 +57,10 @@ app.get('/api/map', (req, res) => {
   res.sendFile(path.join(__dirname+'/lib/map/map.html'));
 });
 
+app.get('/admin', (req, res) => {
+  res.sendFile(path.join(__dirname+'/admin/index.html'));
+});
+
 app.post('/api/reports', (req, res) => {
   let request = req.body;
   data_mng.get_reports_filtered(request, res, TYPE_FACEBOOK);
