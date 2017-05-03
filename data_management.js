@@ -7,6 +7,15 @@ const uuidV1 = require('uuid/v1');
 const INDEX_REQUEST = 'request';
 const INDEX_HASHTAGS = 'syntax_tree';
 const FIRST_HASHTAG = 'Origine';
+const UNTREATED = 'Untreated';
+const IN_PROGRESS = 'In progress';
+const DONE = 'Done';
+
+
+let table_state = [];
+table_state[UNTREATED] = IN_PROGRESS;
+table_state[IN_PROGRESS] = DONE;
+table_state[DONE] = DONE;
 
 var exports = module.exports = {};
 
@@ -24,6 +33,8 @@ function save_request(request, res, type_platform) {
       request.request_id = key;
       request.date = actual_date;
       request.technician_id = "";
+      request.image_final = null;
+      request.date_final = null;
       request.state = "Untreated";
       esmng.add_document(INDEX_REQUEST, type_platform, request, function (error, response) {
         if (error) {
@@ -120,6 +131,41 @@ function get_reports_filtered(request, res, type_platform) {
   }
 }
 
+function change_state(request, res, type_platform) {
+  try {
+    if (request.request_id) {
+      let query = {"query": {"term": {
+        "request_id" : request.request_id
+      }}};
+      esmng.search_document(INDEX_REQUEST, type_platform, query, function (hits) {
+        let reports = [];
+        if (hits.length != 0) {
+          hits.forEach(function (hit) {
+            reports.push(hit._source);
+          });
+        }
+        let new_state = table_state[reports[0].state];
+        if(new_state != null) {
+          reports[0].state = new_state;
+          esmng.add_document(INDEX_REQUEST, type_platform, reports[0], function (error, response) {
+            if (error) {
+              res.status(500).send("The report couldn't be saved : " + error.message);
+            } else {
+              res.json(reports[0]);
+            }
+          }, hits[0]._id);
+        } else {
+          throw new Error("The state isn't correct");
+        }
+      });
+    } else {
+      throw new Error("The request id parameter is missing");
+    }
+  } catch (e) {
+    res.status(500).send(e.message);
+  }
+}
+
 function toGeoJSON(hits, request) {
   let geojson = {
     "type": "FeatureCollection",
@@ -130,10 +176,14 @@ function toGeoJSON(hits, request) {
       "user_id": hit.user_id,
       "request_id": hit.request_id,
       "date": hit.date,
-      "hashtags": hit.hashtags
+      "hashtags": hit.hashtags,
+      "state": hit.state,
+      "technician_id": hit.technician_id,
+      "date_final": hit.date_final
     };
     if(request.full == true) {
       properties.image = hit.image;
+      properties.image_final = hit.image_final;
     }
     let coordinates = [hit.position.lon, hit.position.lat];
     geojson.features.push({
@@ -172,3 +222,4 @@ function get_next_hashtags(hashtag, res, type_platform) {
 exports.save_request = save_request;
 exports.get_next_hashtags = get_next_hashtags;
 exports.get_reports_filtered = get_reports_filtered;
+exports.change_state = change_state;
