@@ -273,15 +273,15 @@ function getTheListManTwitter(data, onClick) {
 
         if(feature.properties.state == UNTREATED)
         {
-          popup_text = popup_text + '<img class="stateIcon" src="resources/State_Untreated_icon.png"/>';
+          popup_text = popup_text + '<img class="stateIcon" src="static/admin/resources/State_Untreated_icon.png"/>';
         }
         else if (feature.properties.state == IN_PROGRESS)
         {
-          popup_text = popup_text + '<img class="stateIcon" src="resources/State_In_Progress_icon.png"/>';
+          popup_text = popup_text + '<img class="stateIcon" src="static/admin/resources/State_In_Progress_icon.png"/>';
         }
         else
         {
-          popup_text = popup_text + '<img class="stateIcon" src="resources/State_Done_icon.png"/>';
+          popup_text = popup_text + '<img class="stateIcon" src="static/admin/resources/State_Done_icon.png"/>';
         }
 
 
@@ -404,15 +404,15 @@ function addDataFb(data, onClick) {
       let myIcon;
       switch(feature.properties.state) {
         case "In progress" :
-        pre_icon.iconUrl = 'static/resources/State_In_Progress_icon.png';
+        pre_icon.iconUrl = 'static/admin/resources/State_In_Progress_icon.png';
         myIcon = L.icon(pre_icon);
         break;
         case "Done" :
-        pre_icon.iconUrl = 'static/resources/State_Done_icon.png';
+        pre_icon.iconUrl = 'static/admin/resources/State_Done_icon.png';
         myIcon= L.icon(pre_icon);
         break;
         default :
-        pre_icon.iconUrl = 'static/resources/State_Untreated_icon.png';
+        pre_icon.iconUrl = 'static/admin/resources/State_Untreated_icon.png';
         myIcon= L.icon(pre_icon);
         break;
       }
@@ -439,15 +439,15 @@ function addDataTwitter(data, onClick) {
       let myIcon;
       switch(feature.properties.state) {
         case "In progress" :
-        pre_icon.iconUrl = 'static/resources/State_In_Progress_icon.png';
+        pre_icon.iconUrl = 'static/admin/resources/State_In_Progress_icon.png';
         myIcon = L.icon(pre_icon);
         break;
         case "Done" :
-        pre_icon.iconUrl = 'static/resources/State_Done_icon.png';
+        pre_icon.iconUrl = 'static/admin/resources/State_Done_icon.png';
         myIcon= L.icon(pre_icon);
         break;
         default :
-        pre_icon.iconUrl = 'static/resources/State_Untreated_icon.png';
+        pre_icon.iconUrl = 'static/admin/resources/State_Untreated_icon.png';
         myIcon= L.icon(pre_icon);
         break;
       }
