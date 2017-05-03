@@ -40,7 +40,8 @@ function search_document (index, type, query, callback) {
     from : 0,
     size : 50,
     body: {
-      query: query
+      query: query,
+      sort:"request_id:desc"
     }
   },function (error, response, status) {
     if (error){
