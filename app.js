@@ -72,9 +72,14 @@ app.post('/api/reports/state', (req, res) => {
   data_mng.change_state(request, res, TYPE_FACEBOOK, sendResponse);
 });
 
-app.get('/api/reports/', (req, res) => {
+app.get('/api/reports/twitter', (req, res) => {
 let request = {filters : []};
-data_mng.get_reports_filtered(request, res, TYPE_FACEBOOK);
+data_mng.get_reports_filtered(request, res, TYPE_TWITTER);
+});
+
+app.post('/api/reports/twitter/state', (req, res) => {
+  let request = req.body;
+  data_mng.change_state(request, res, TYPE_TWITTER, sendResponse);
 });
 
 app.get('/api/user/twitter', (req, res) => {
