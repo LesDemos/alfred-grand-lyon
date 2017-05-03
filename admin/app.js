@@ -33,7 +33,8 @@ let filter = {
 }
 
 getTheListMan.counter = 0;
-retrieveReports(filter, getTheListMan);
+getTheListManTwitter.counter = 0;
+retrieveReports(filter, getTheListMan, getTheListManTwitter);
 
 /* Map loading, with a first filter */
 $('#mapButton').mouseup( function () {
@@ -72,11 +73,11 @@ $('#mapButton').mouseup( function () {
         to : now.toString()
       }, {
         type : "state",
-        values : [UNTREATED, IN_PROGRESS]
+        values : ["Untreated", "In progress"]
       }],
       full : true
-    }
-    retrieveReports(filter, addData);
+    };
+    retrieveReports(filter, addDataFb, addDataTwitter);
   }, 500);
 });
 
@@ -218,8 +219,131 @@ function getTheListMan(data, onClick)
 });
 }
 
+function getTheListManTwitter(data, onClick) {
+
+  $.each(data.features, function(i, feature) {
+    fetch(window.Viz.apiEndpoint + 'user/twitter?user_id=' + feature.properties.user_id + '&username=' + feature.properties.username, {
+      method: 'GET',
+      headers: {'Content-Type': 'application/json; charset=UTF-8'}
+    }).then(
+    function(response) {
+      if (response.status !== 200) {
+        console.log('Looks like there was a problem. Status Code: ' +
+          response.status);
+        return;
+      }
+      response.json().then(data => {
+
+        getTheListManTwitter.counter = getTheListMan.counter;
+
+        let date= new Date(feature.properties.date),
+        dformat = [date.getDate().padLeft(),
+        (date.getMonth()+1).padLeft(),
+        date.getFullYear()].join('/');
+
+        let date_final= new Date(feature.properties.date_final),
+        dformat2 = [date_final.getDate().padLeft(),
+        (date_final.getMonth()+1).padLeft(),
+        date_final.getFullYear()].join('/');
+
+        let popup_text = '<div class="">' +
+        '<div class="card horizontal">' +
+        '<div class="card-image">' +
+        '<img class="reportImage" src="' + feature.properties.image + '">' +
+        '</div>' +
+        '<div class="card-stacked">' +
+        '<div class="card-content">' +
+        '<ul class="collection">' +
+        '<li class="collection-item avatar">' +
+        '<img src=" '+ data.profile_image_url_https + '" class="circle"/>' +
+        '<span class="title">' + data.name+ '</span>' +
+        '<p>' + dformat + ((feature.properties.date_final!=null) ? " - " + dformat2 : "") + "</br></p>" +
+        '</li>' +
+        '</ul>' +
+        '<div class="col">' +
+        '<blockquote>';
+
+
+
+        /* We add the report hashtags */
+        feature.properties.hashtags.forEach(function(hashtag){
+          popup_text = popup_text + '<span class="chip">#' + hashtag + ' </span>';
+        });
+        popup_text = popup_text + '<p></br>';
+
+        if(feature.properties.state == UNTREATED)
+        {
+          popup_text = popup_text + '<img class="stateIcon" src="resources/State_Untreated_icon.png"/>';
+        }
+        else if (feature.properties.state == IN_PROGRESS)
+        {
+          popup_text = popup_text + '<img class="stateIcon" src="resources/State_In_Progress_icon.png"/>';
+        }
+        else
+        {
+          popup_text = popup_text + '<img class="stateIcon" src="resources/State_Done_icon.png"/>';
+        }
+
+
+        popup_text = popup_text + '  ' + table_state[feature.properties.state] + '</br></p>' +
+        '</blockquote></div>' +
+        '</div>' +
+        '<div class="card-action center-align">';
+
+        if(feature.properties.state == UNTREATED)
+        {
+          popup_text = popup_text + '<form id="feature'+getTheListMan.counter+'Form" action="https://alfred-grand-lyon.herokuapp.com/api/reports/state" method="post">' +
+          '<input type="text" name="request_id" id="request_id" value="' + feature.properties.request_id + '" hidden=true/>' +
+          '<input type="text" name="technician_id" id="technician_id" value="58" hidden=true/>' +
+          '</form>' +
+          '<button onClick="SubForm(\'feature'+getTheListMan.counter+'\')" class="waves-effect waves-light btn-large buttonCard">Affecter un technicien</button>';
+        }
+        else if (feature.properties.state == IN_PROGRESS)
+        {
+          popup_text = popup_text + '<button disabled class="waves-effect waves-light btn-large buttonCard">Affecter un technicien</button>';
+        }
+        else
+        {
+          if(feature.properties.image_final != null)
+          {
+            popup_text = popup_text + '<a class="waves-effect waves-light btn-large" href="#modal1">Resultat de l\'intervention</a>' +
+            '<div id="modal1" class="modal">' +
+            '<div class="modal-content">' +
+            '<h4>Resultat de l\'intervention</h4>' +
+            '<img src="feature.properties.image_final"/>' +
+            '</div>' +
+            '</div>';
+          }
+          else
+          {
+            popup_text = popup_text + '<a disabled class="waves-effect waves-light btn-large" href="#modal1">Resultat de l\'intervention</a>';
+          }
+        }
+
+        popup_text = popup_text +
+        '</div>' +
+        '</div>' +
+        '</div>' +
+        '</div>';
+
+        var y = getTheListMan.counter + 1;
+
+        $('#feature'+getTheListMan.counter).html(popup_text);
+        $('.modal').modal();
+        $('#feature'+getTheListMan.counter).after('</li><li id=feature' + y + '>');
+
+        getTheListMan.counter = y;
+
+      });
+})
+.catch(function(err) {
+  console.log('Fetch Error :-S', err);
+});
+});
+}
+
 /* Retrieves reports corresponding to a filter provided */
-function retrieveReports(query, callback) {
+function retrieveReports(query, callback1, callback2) {
   mapLayerGroups = [];
   fetch(window.Viz.apiEndpoint + 'reports', {
     body: JSON.stringify(query),
@@ -234,7 +358,27 @@ function retrieveReports(query, callback) {
     }
     response.json().then(data => {
       console.log(data);
-      callback(data, onClick);
+      callback1(data, onClick);
+    });
+  })
+  .catch(function(err) {
+    console.log('Fetch Error :-S', err);
+  });
+
+  fetch(window.Viz.apiEndpoint + 'reports/twitter', {
+    body: JSON.stringify(query),
+    method: 'POST',
+    headers: {'Content-Type': 'application/json; charset=UTF-8'}
+  }).then(
+  function(response) {
+    if (response.status !== 200) {
+      console.log('Looks like there was a problem. Status Code: ' +
+        response.status);
+      return;
+    }
+    response.json().then(data => {
+      console.log(data);
+      callback2(data, onClick);
     });
   })
   .catch(function(err) {
@@ -243,7 +387,7 @@ function retrieveReports(query, callback) {
 }
 
 /* Add a GeoJSON file to the map, with a customized icon */
-function addData(data, onClick) {
+function addDataFb(data, onClick) {
   /* Add the control layer to the map */
   overlayMaps = L.control.layers(undefined, overlayMaps).addTo(mymap);
 
@@ -255,26 +399,61 @@ function addData(data, onClick) {
 
   /* Add the data to the map */
   L.geoJSON(data,{
-    onEachFeature: onEachFeature,
+    onEachFeature: onEachFeatureFb,
     pointToLayer: function (feature, latlng) {
       let myIcon;
       switch(feature.properties.state) {
-        case IN_PROGRESS :
-        pre_icon.iconUrl = 'resources/State_In_Progress_icon.png';
+        case "In progress" :
+        pre_icon.iconUrl = 'static/resources/State_In_Progress_icon.png';
         myIcon = L.icon(pre_icon);
         break;
-        case DONE :
-        pre_icon.iconUrl = 'resources/State_Done_icon.png';
+        case "Done" :
+        pre_icon.iconUrl = 'static/resources/State_Done_icon.png';
         myIcon= L.icon(pre_icon);
         break;
         default :
-        pre_icon.iconUrl = 'resources/State_Untreated_icon.png';
+        pre_icon.iconUrl = 'static/resources/State_Untreated_icon.png';
         myIcon= L.icon(pre_icon);
         break;
       }
       return L.marker(latlng, {icon: myIcon});
     }
   }).on("click", onClick);
+
+}
+
+/* Add a GeoJSON file to the map, with a customized icon */
+function addDataTwitter(data, onClick) {
+  /* Add the control layer to the map */
+
+  let pre_icon = {
+    iconUrl: '',
+    iconSize: [25, 25],
+    popupAnchor: [5, -20],
+  };
+
+  /* Add the data to the map */
+  L.geoJSON(data,{
+    onEachFeature: onEachFeatureTwitter,
+    pointToLayer: function (feature, latlng) {
+      let myIcon;
+      switch(feature.properties.state) {
+        case "In progress" :
+        pre_icon.iconUrl = 'static/resources/State_In_Progress_icon.png';
+        myIcon = L.icon(pre_icon);
+        break;
+        case "Done" :
+        pre_icon.iconUrl = 'static/resources/State_Done_icon.png';
+        myIcon= L.icon(pre_icon);
+        break;
+        default :
+        pre_icon.iconUrl = 'static/resources/State_Untreated_icon.png';
+        myIcon= L.icon(pre_icon);
+        break;
+      }
+      return L.marker(latlng, {icon: myIcon});
+    }
+  }).addTo(mymap);
 
 }
 
@@ -285,13 +464,13 @@ function onClick(event) {
 }
 
 /* Creation of layer groups, added to the map, and binding of popups */
-function onEachFeature(feature, layer) {
+function onEachFeatureFb(feature, layer) {
   var lg = mapLayerGroups[feature.properties.hashtags[0]];
 
   /* If the layer group doesn't exist, we create it */
   if (lg === undefined) {
     lg = new L.layerGroup();
-    //add group layer to the map 
+    //add group layer to the map
     lg.addTo(mymap);
     //store layer
     mapLayerGroups[feature.properties.hashtags[0]] = lg;
@@ -302,6 +481,12 @@ function onEachFeature(feature, layer) {
   //add the feature to the layer
   lg.addLayer(layer);
   getInfoFb(feature, layer);
+}
+
+/* Creation of layer groups, added to the map, and binding of popups */
+function onEachFeatureTwitter(feature, layer) {
+
+  getInfoTwitter(feature, layer);
 }
 
 /* Getting basic facebook user info, thanks to its id */
@@ -317,7 +502,28 @@ function getInfoFb(feature, layer) {
       return;
     }
     response.json().then(data => {
-      data_treatment(data, feature, layer);
+      data_treatment_fb(data, feature, layer);
+    });
+  })
+  .catch(function(err) {
+    console.log('Fetch Error :-S', err);
+  });
+}
+
+/* Getting basic twitter user info, thanks to its id and username */
+function getInfoTwitter(feature, layer) {
+  fetch(window.Viz.apiEndpoint + 'user/twitter?user_id=' + feature.properties.user_id + '&username=' + feature.properties.username, {
+    method: 'GET',
+    headers: {'Content-Type': 'application/json; charset=UTF-8'}
+  }).then(
+  function(response) {
+    if (response.status !== 200) {
+      console.log('Looks like there was a problem. Status Code: ' +
+        response.status);
+      return;
+    }
+    response.json().then(data => {
+      data_treatment_twitter(data, feature, layer);
     });
   })
   .catch(function(err) {
@@ -326,7 +532,7 @@ function getInfoFb(feature, layer) {
 }
 
 /* Binding of popups */
-function data_treatment(response, feature, layer) {
+function data_treatment_fb(response, feature, layer) {
   let date= new Date(feature.properties.date),
   dformat = [date.getDate().padLeft(),
   (date.getMonth()+1).padLeft(),
@@ -338,6 +544,40 @@ function data_treatment(response, feature, layer) {
   '<div class="fb-title">' + response.last_name+ '</div>' +
   '<div class="fb-subtitle">' + response.first_name + '</div>' +
   '<div class="fb-text">' + dformat + '</div>' +
+  '</div></div><div class="report-informations">';
+
+  /* We add the report hashtags */
+  feature.properties.hashtags.forEach(function(hashtag){
+    popup_text = popup_text + '<span class="fb-tag">' + hashtag + '</span>';
+  });
+  popup_text = popup_text + '</div></div>';
+
+  /* We add the report image if there is one */
+  if(feature.properties.image) {
+    popup_text = popup_text + '<div class="report-thumb"><img src="' + feature.properties.image + '" height=140 width=100/></div>';
+  }
+  popup_text = popup_text + '</div>';
+
+  /* Binding of the popup created */
+  if (feature.properties) {
+    layer.bindPopup(popup_text, {
+      maxWidth : 800
+    });
+  }
+}
+
+/* Binding of popups */
+function data_treatment_twitter(response, feature, layer) {
+  let date= new Date(feature.properties.date),
+  dformat = [date.getDate().padLeft(),
+  (date.getMonth()+1).padLeft(),
+  date.getFullYear()].join('/');
+  let popup_text = '<div class="popup-container">' + '<div class="tt-container">' +
+  '<div class="tt-informations">'+
+  '<div class="tt-thumb"><img src="' + response.profile_image_url_https + '" height=60 width=60/></div>' +
+  '<div class="tt-content">' +
+  '<div class="tt-title">' + response.name+ '</div>' +
+  '<div class="tt-text">' + dformat + '</div>' +
   '</div></div><div class="report-informations">';
 
   /* We add the report hashtags */
