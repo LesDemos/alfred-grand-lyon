@@ -89,7 +89,7 @@ app.get('/api/user', (req, res) => {
 });
 
 var twitBot = new TwitBot('Epakza');
-//twitBot.run();
+twitBot.run();
 
 /* Example of data to provide to the route /api/request */
 app.get('/api/request/fb', (req, res) => {
