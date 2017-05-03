@@ -181,9 +181,9 @@ function change_state(request, res, type_platform, callback) {
       }
       let new_state = table_state[reports[0].state];
       if(new_state != null) {
+        reports[0].state = new_state;
         switch(new_state) {
           case IN_PROGRESS :
-            reports[0].state = new_state;
             if(request.technician_id) {
               reports[0].technician_id = request.technician_id;
             } else {
