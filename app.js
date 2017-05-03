@@ -31,6 +31,9 @@ app.use('/bot/fb', fbBot.botly.router());
 const TYPE_FACEBOOK = 'facebook';
 const TYPE_TWITTER = 'twitter';
 
+var twitBot = new TwitBot('Epakza');
+twitBot.run();
+
 app.get('/', function(req, res) {
   console.log('Received request on /');
   res.status(200).send('Hello Alfred!');
@@ -74,6 +77,21 @@ let request = {filters : []};
 data_mng.get_reports_filtered(request, res, TYPE_FACEBOOK);
 });
 
+app.get('/api/user/twitter', (req, res) => {
+  let user_id = req.query.user_id;
+  let username = req.query.username;
+  if(user_id) {
+    twitBot.getUserProfile(user_id, username, (err, user_profile) => {
+      if (err) {
+        throw err;
+      }
+      res.json(user_profile);
+    });
+  } else {
+    res.status(500).send("The user_id parameter is missing");
+  }
+});
+
 app.get('/api/user', (req, res) => {
   let user_id = req.query.user_id;
   if(user_id) {
@@ -87,9 +105,6 @@ app.get('/api/user', (req, res) => {
     res.status(500).send("The user_id parameter is missing");
   }
 });
-
-var twitBot = new TwitBot('Epakza');
-twitBot.run();
 
 /* Example of data to provide to the route /api/request */
 app.get('/api/request/fb', (req, res) => {
