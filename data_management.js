@@ -178,7 +178,7 @@ function toGeoJSON(hits, request) {
       "date": hit.date,
       "hashtags": hit.hashtags,
       "state": hit.state,
-      "technician_id": hit.technician_id
+      "technician_id": hit.technician_id,
       "date_final": hit.date_final
     };
     if(request.full == true) {
