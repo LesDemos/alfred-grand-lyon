@@ -10,6 +10,16 @@ var mapLayerGroups = [];
 /* Control layer */
 var overlayMaps;
 
+const UNTREATED = 'Untreated';
+const IN_PROGRESS = 'In progress';
+const DONE = 'Done';
+
+
+let table_state = [];
+table_state[UNTREATED] = "Non traité";
+table_state[IN_PROGRESS] = "En cours de traitement";
+table_state[DONE] = "Traité";
+
 let now = new Date();
 let before = new Date();
 before.setDate(now.getDate()-7);
@@ -38,8 +48,8 @@ $('#mapButton').mouseup( function () {
       var div = L.DomUtil.create('div', 'info legend');
 
       div.innerHTML =
-      '<img src="resources/State_Untreated_icon.png" alt="Untreated" style="width:20px;height:20px;">' + '<span>' + "Untreated" + '</span>' + '<br>' +
-      '<img src="resources/State_In_Progress_icon.png" alt="In progress" style="width:20px;height:20px;">' + '<span>' + "In progress" + '</span>';
+      '<img src="resources/State_Untreated_icon.png" alt="Untreated" style="width:20px;height:20px;">' + '<span>' + table_state[UNTREATED] + '</span>' + '<br>' +
+      '<img src="resources/State_In_Progress_icon.png" alt="In progress" style="width:20px;height:20px;">' + '<span>' + table_state[IN_PROGRESS] + '</span>';
       return div;
     };
 
@@ -62,7 +72,7 @@ $('#mapButton').mouseup( function () {
         to : now.toString()
       }, {
         type : "state",
-        values : ["Untreated", "In progress"]
+        values : [UNTREATED, IN_PROGRESS]
       }],
       full : true
     }
@@ -137,11 +147,11 @@ function getTheListMan(data, onClick)
         });
         popup_text = popup_text + '<p></br>';
 
-        if(feature.properties.state == "Untreated")
+        if(feature.properties.state == UNTREATED)
         {
           popup_text = popup_text + '<img class="stateIcon" src="resources/State_Untreated_icon.png"/>';
         }
-        else if (feature.properties.state == "In progress")
+        else if (feature.properties.state == IN_PROGRESS)
         {
           popup_text = popup_text + '<img class="stateIcon" src="resources/State_In_Progress_icon.png"/>';
         }
@@ -151,12 +161,12 @@ function getTheListMan(data, onClick)
         }
 
 
-        popup_text = popup_text + '  ' + feature.properties.state + '</br></p>' +
+        popup_text = popup_text + '  ' + table_state[feature.properties.state] + '</br></p>' +
         '</blockquote></div>' +
         '</div>' +
         '<div class="card-action center-align">';
 
-        if(feature.properties.state == "Untreated")
+        if(feature.properties.state == UNTREATED)
         {
           popup_text = popup_text + '<form id="feature'+getTheListMan.counter+'Form" action="https://alfred-grand-lyon.herokuapp.com/api/reports/state" method="post">' +
           '<input type="text" name="request_id" id="request_id" value="' + feature.properties.request_id + '" hidden=true/>' +
@@ -164,7 +174,7 @@ function getTheListMan(data, onClick)
           '</form>' +
           '<button onClick="SubForm(\'feature'+getTheListMan.counter+'\')" class="waves-effect waves-light btn-large buttonCard">Affecter un technicien</button>';
         }
-        else if (feature.properties.state == "In progress")
+        else if (feature.properties.state == IN_PROGRESS)
         {
           popup_text = popup_text + '<button disabled class="waves-effect waves-light btn-large buttonCard">Affecter un technicien</button>';
         }
@@ -249,11 +259,11 @@ function addData(data, onClick) {
     pointToLayer: function (feature, latlng) {
       let myIcon;
       switch(feature.properties.state) {
-        case "In progress" :
+        case IN_PROGRESS :
         pre_icon.iconUrl = 'resources/State_In_Progress_icon.png';
         myIcon = L.icon(pre_icon);
         break;
-        case "Done" :
+        case DONE :
         pre_icon.iconUrl = 'resources/State_Done_icon.png';
         myIcon= L.icon(pre_icon);
         break;
