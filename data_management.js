@@ -102,6 +102,13 @@ function get_reports_filtered(request, res, type_platform) {
                 }
               });
               break;
+            case 'technician_id' :
+              query.query.bool.must.push({
+                "term": {
+                  "technician_id": filter.technician_id
+                }
+              });
+              break;
             case 'hashtags' :
               break;
             case 'state' :
