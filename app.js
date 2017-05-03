@@ -43,7 +43,7 @@ app.post('/api/request/fb', (req, res) => {
 
 app.post('/api/request/twitter', (req, res) => {
   let request = req.body;
-  data_mng.save_request(request, res, 'coucou');
+  data_mng.save_request(request, res, TYPE_TWITTER);
 });
 
 app.get('/api/hashtags', (req, res) => {

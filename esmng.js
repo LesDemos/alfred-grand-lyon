@@ -12,10 +12,6 @@ var esdb = new elasticsearch.Client( {
 
 function add_document (index, type, document, callback, id) {
   if (id == null) {
-    console.log(index);
-    console.log(type);
-    console.log(document);
-    console.log(id);
     esdb.index({
       index: index,
       type: type,
