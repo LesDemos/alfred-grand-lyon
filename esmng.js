@@ -41,7 +41,8 @@ function search_document (index, type, query, callback) {
     size : 50,
     body: {
       query: query
-    }
+    },
+    sort:"request_id:asc"
   },function (error, response, status) {
     if (error){
       console.log("search error: "+error)
