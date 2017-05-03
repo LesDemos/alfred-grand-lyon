@@ -57,7 +57,7 @@ app.post('/api/reports', (req, res) => {
 
 app.post('/api/reports/state', (req, res) => {
   let request = req.body;
-  data_mng.change_state(request, res, TYPE_FACEBOOK);
+  data_mng.change_state(request, res, TYPE_FACEBOOK, sendResponse);
 });
 
 app.get('/api/reports/', (req, res) => {
@@ -93,6 +93,14 @@ app.get('/api/request/fb', (req, res) => {
   data_mng.save_request(request);
   res.send("Request processed");
 });
+
+function sendResponse(err, res, req) {
+  if(err != null) {
+    res.status(500).send(err.message);
+  } else {
+    res.json(req);
+  }
+}
 
 app.listen(PORT, function() {
   console.log('Listening on port ' + PORT);
