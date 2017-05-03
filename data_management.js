@@ -213,7 +213,7 @@ function toGeoJSON(hits, request) {
       "technician_id": hit.technician_id,
       "date_final": hit.date_final
     };
-    if(request.full == true) {
+    if(request.full != false) {
       properties.image = hit.image;
       properties.image_final = hit.image_final;
     }
