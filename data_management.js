@@ -26,6 +26,7 @@ and the hashtags. The date and the request_id are automatically generated.
 
 function save_request(request, res, type_platform) {
   try {
+      console.log(request);
       if (request.hasOwnProperty('user_id') && request.hasOwnProperty('image') && request.hasOwnProperty('position') &&
       request.hasOwnProperty('hashtags')) {
       let key = uuidV1();
