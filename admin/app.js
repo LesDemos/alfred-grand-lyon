@@ -318,7 +318,7 @@ function getTheListManTwitter(data, onClick) {
           '<input type="text" name="request_id" id="request_id" value="' + feature.properties.request_id + '" hidden=true/>' +
           '<input type="text" name="technician_id" id="technician_id" value="58" hidden=true/>' +
           '</form>' +
-          '<button onClick="SubForm(\'feature'+getTheListMan.counter+'\')" class="waves-effect waves-light btn-large buttonCard">Affecter un technicien</button>';
+          '<button onClick="SubFormTwitter(\'feature'+getTheListMan.counter+'\')" class="waves-effect waves-light btn-large buttonCard">Affecter un technicien</button>';
         }
         else if (feature.properties.state == IN_PROGRESS)
         {
