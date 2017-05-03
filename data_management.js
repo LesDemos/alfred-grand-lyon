@@ -179,27 +179,28 @@ function change_state(request, res, type_platform, callback) {
           reports.push(hit._source);
         });
       }
-      let new_state = table_state[reports[0].state];
-      if(new_state != null) {
-        reports[0].state = new_state;
-        switch(new_state) {
-          case IN_PROGRESS :
-            if(request.technician_id) {
-              reports[0].technician_id = request.technician_id;
-            } else {
-               callback(new Error("The technician id is missing"), res);
-            }
-            break;
-          case DONE :
-            if(request.image_final) {
-              reports[0].image_final = request.image_final;
-            } 
-            let actual_date = new Date();
-            reports[0].date_final = actual_date;
-            break;
-          default :
-            break;
-        }
+      if(reports.length > 0) {
+        let new_state = table_state[reports[0].state];
+        if (new_state != null) {
+          reports[0].state = new_state;
+          switch (new_state) {
+            case IN_PROGRESS :
+              if (request.technician_id) {
+                reports[0].technician_id = request.technician_id;
+              } else {
+                callback(new Error("The technician id is missing"), res);
+              }
+              break;
+            case DONE :
+              if (request.image_final) {
+                reports[0].image_final = request.image_final;
+              }
+              let actual_date = new Date();
+              reports[0].date_final = actual_date;
+              break;
+            default :
+              break;
+          }
           esmng.add_document(INDEX_REQUEST, type_platform, reports[0], function (error, response) {
             if (error) {
               callback(new Error("The report couldn't be saved : " + error.message), res);
@@ -207,8 +208,11 @@ function change_state(request, res, type_platform, callback) {
               callback(null, res, reports[0]);
             }
           }, hits[0]._id);
+        } else {
+          callback(new Error("The state isn't correct"), res);
+        }
       } else {
-        callback(new Error("The state isn't correct"), res);
+        callback(new Error("The id provided isn't correct"), res);
       }
     });
   } else {
