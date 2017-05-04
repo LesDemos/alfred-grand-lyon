@@ -205,7 +205,7 @@ function getTheListMan(data, onClick)
         {
           if(feature.properties.image_final != null)
           {
-            popup_text = popup_text + '<a class="waves-effect waves-light btn-large" href="#modal1">Resultat de l\'intervention</a>' +
+            popup_text = popup_text + '<a class="waves-effect waves-light btn-large buttonCard" href="#modal1">Resultat de l\'intervention</a>' +
             '<div id="modal1" class="modal">' +
             '<div class="modal-content">' +
             '<h4>Resultat de l\'intervention</h4>' +
@@ -215,7 +215,7 @@ function getTheListMan(data, onClick)
           }
           else
           {
-            popup_text = popup_text + '<a disabled class="waves-effect waves-light btn-large" href="#modal1">Resultat de l\'intervention</a>';
+            popup_text = popup_text + '<a disabled class="waves-effect waves-light btn-large buttonCard" href="#modal1">Resultat de l\'intervention</a>';
           }
         }
 
@@ -328,7 +328,7 @@ function getTheListManTwitter(data, onClick) {
         {
           if(feature.properties.image_final != null)
           {
-            popup_text = popup_text + '<a class="waves-effect waves-light btn-large" href="#modal1">Resultat de l\'intervention</a>' +
+            popup_text = popup_text + '<a class="waves-effect waves-light btn-large buttonCard" href="#modal1">Resultat de l\'intervention</a>' +
             '<div id="modal1" class="modal">' +
             '<div class="modal-content">' +
             '<h4>Resultat de l\'intervention</h4>' +
@@ -338,7 +338,7 @@ function getTheListManTwitter(data, onClick) {
           }
           else
           {
-            popup_text = popup_text + '<a disabled class="waves-effect waves-light btn-large" href="#modal1">Resultat de l\'intervention</a>';
+            popup_text = popup_text + '<a disabled class="waves-effect waves-light btn-large buttonCard" href="#modal1">Resultat de l\'intervention</a>';
           }
         }
 
