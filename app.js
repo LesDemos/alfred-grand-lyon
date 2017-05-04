@@ -40,6 +40,11 @@ app.get('/', function(req, res) {
   res.status(200).send('Hello Alfred!');
 });
 
+app.post('/api/request/fb', (req, res) => {
+ let request = req.body;
+ data_mng.save_request(request, res, TYPE_FACEBOOK);
+});
+
 app.post('/api/request/twitter', (req, res) => {
   let request = req.body;
   data_mng.save_request(request, res, TYPE_TWITTER);
@@ -69,7 +74,7 @@ app.post('/api/reports', (req, res) => {
 
 app.post('/api/reports/twitter', (req, res) => {
   let request = req.body;
-data_mng.get_reports_filtered(request, res, TYPE_TWITTER);
+  data_mng.get_reports_filtered(request, res, TYPE_TWITTER);
 });
 
 app.post('/api/reports/state', (req, res) => {
@@ -78,8 +83,8 @@ app.post('/api/reports/state', (req, res) => {
 });
 
 app.get('/api/reports/twitter', (req, res) => {
-let request = {filters : []};
-data_mng.get_reports_filtered(request, res, TYPE_TWITTER);
+  let request = {filters : []};
+  data_mng.get_reports_filtered(request, res, TYPE_TWITTER);
 });
 
 app.post('/api/reports/twitter/state', (req, res) => {
