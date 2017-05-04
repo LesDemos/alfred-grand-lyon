@@ -187,7 +187,7 @@ function getTheListMan(data, onClick)
         popup_text = popup_text + '  ' + table_state[feature.properties.state] + '</br></p>' +
         '</blockquote></div>' +
         '</div>' +
-        '<div class="card-action center-align fixed-action-btn">';
+        '<div class="card-action center-align">';
 
         if(feature.properties.state == UNTREATED)
         {
@@ -310,7 +310,7 @@ function getTheListManTwitter(data, onClick) {
         popup_text = popup_text + '  ' + table_state[feature.properties.state] + '</br></p>' +
         '</blockquote></div>' +
         '</div>' +
-        '<div class="card-action center-align fixed-action-btn">';
+        '<div class="card-action center-align">';
 
         if(feature.properties.state == UNTREATED)
         {
