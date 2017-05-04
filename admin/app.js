@@ -209,7 +209,7 @@ function getTheListMan(data, onClick)
             '<div id="modal1" class="modal">' +
             '<div class="modal-content">' +
             '<h4>Resultat de l\'intervention</h4>' +
-            '<img src="' + feature.properties.image_final + '"/>' +
+            '<img src="data:image/png;base64, ' + feature.properties.image_final + '"/>' +
             '</div>' +
             '</div>';
           }
@@ -332,7 +332,7 @@ function getTheListManTwitter(data, onClick) {
             '<div id="modal1" class="modal">' +
             '<div class="modal-content">' +
             '<h4>Resultat de l\'intervention</h4>' +
-            '<img src="' + feature.properties.image_final + '"/>' +
+            '<img src="data:image/png;base64, ' + feature.properties.image_final + '"/>' +
             '</div>' +
             '</div>';
           }
