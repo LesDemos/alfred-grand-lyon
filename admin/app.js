@@ -195,11 +195,11 @@ function getTheListMan(data, onClick)
           '<input type="text" name="request_id" id="request_id" value="' + feature.properties.request_id + '" hidden=true/>' +
           '<input type="text" name="technician_id" id="technician_id" value="58" hidden=true/>' +
           '</form>' +
-          '<button onClick="SubForm(\'feature'+getTheListMan.counter+'\')" class="waves-effect waves-light btn-large buttonCard">Affecter un technicien</button>';
+          '<button onClick="SubForm(\'feature'+getTheListMan.counter+'\')" class="waves-effect waves-light btn-large buttonCard">Prise en charge</button>';
         }
         else if (feature.properties.state == IN_PROGRESS)
         {
-          popup_text = popup_text + '<button disabled class="waves-effect waves-light btn-large buttonCard">Affecter un technicien</button>';
+          popup_text = popup_text + '<button disabled class="waves-effect waves-light btn-large buttonCard">Pris en charge</button>';
         }
         else
         {
@@ -318,11 +318,11 @@ function getTheListManTwitter(data, onClick) {
           '<input type="text" name="request_id" id="request_id" value="' + feature.properties.request_id + '" hidden=true/>' +
           '<input type="text" name="technician_id" id="technician_id" value="58" hidden=true/>' +
           '</form>' +
-          '<button onClick="SubFormTwitter(\'feature'+getTheListMan.counter+'\')" class="waves-effect waves-light btn-large buttonCard">Affecter un technicien</button>';
+          '<button onClick="SubFormTwitter(\'feature'+getTheListMan.counter+'\')" class="waves-effect waves-light btn-large buttonCard">Prise en charge</button>';
         }
         else if (feature.properties.state == IN_PROGRESS)
         {
-          popup_text = popup_text + '<button disabled class="waves-effect waves-light btn-large buttonCard">Affecter un technicien</button>';
+          popup_text = popup_text + '<button disabled class="waves-effect waves-light btn-large buttonCard">Pris en charge</button>';
         }
         else
         {
