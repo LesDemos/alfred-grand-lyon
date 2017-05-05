@@ -33,7 +33,7 @@ const TYPE_FACEBOOK = 'facebook';
 const TYPE_TWITTER = 'twitter';
 
 var twitBot = new TwitBot('AlfredGrandLyon');
-//twitBot.run();
+twitBot.run();
 
 app.get('/', function(req, res) {
   console.log('Received request on /');
