@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="primary">#8C0011</color>
+    <color name="primary_dark">#8C0011</color>
+    <color name="primary_darker">#960011</color>
+    <color name="primary_light">#FFCDD2</color>
+    <color name="accent">#4f4d50</color>
+    <color name="colorPrimary">#8C0011</color>
+    <color name="colorPrimaryDark">#8C0011</color>
+    <color name="colorAccent">#FFCDD2</color>
+    <color name="primary_text">#212121</color>
+    <color name="secondary_text">#757575</color>
+    <color name="icons">#FFFFFF</color>
+    <color name="divider">#BDBDBD</color>
+
+    <!-- Feed item -->
+    <color name="white">#ffffff</color>
+    <color name="link">#0a80d1</color>
+
+    <!-- Transparent background -->
+    <color name="dimmed_background_color">#59000000</color>
+
+    <color name="black">#000000</color>
+    <color name="jet">#222222</color>
+    <color name="oil">#333333</color>
+    <color name="monsoon">#777777</color>
+    <color name="jumbo">#888888</color>
+    <color name="aluminum">#999999</color>
+    <color name="base">#AAAAAA</color>
+    <color name="iron">#CCCCCC</color>
+
+</resources>

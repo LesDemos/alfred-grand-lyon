@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--item_bot_message.xml- for bot message -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="3dp">
+
+    <ImageView
+        android:id="@+id/iv_image"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@mipmap/ic_launcher" />
+
+    <me.himanshusoni.chatmessageview.ChatMessageView
+        android:id="@+id/chatMessageView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cmv_arrowGravity="start"
+        app:cmv_arrowPosition="left"
+        app:cmv_backgroundColor="#E0E0E0"
+        app:cmv_backgroundColorPressed="#757575"
+        app:cmv_cornerRadius="3dp"
+        app:cmv_showArrow="true">
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/textViewTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:padding="5dp"
+                android:text="Menu Principal"
+                android:textSize="18sp"
+                android:textColor="#D32F2F"/>
+
+            <Button
+                android:text="Mes Interventions"
+                android:layout_width="match_parent"
+                android:gravity="center"
+                android:padding="5dp"
+                android:id="@+id/buttonInterventions"
+                android:background="#BDBDBD"
+                style="@style/Widget.AppCompat.Button"
+                android:layout_height="wrap_content"
+                android:elevation="0dp"
+                android:layout_margin="5dp"/>
+
+            <Button
+                android:text="Carte"
+                android:layout_width="match_parent"
+                android:gravity="center"
+                android:padding="5dp"
+                android:paddingTop="10dp"
+                android:id="@+id/buttonCarte"
+                android:background="#BDBDBD"
+                style="@style/Widget.AppCompat.Button"
+                android:layout_height="wrap_content"
+                android:elevation="0dp"
+                android:layout_margin="5dp"/>
+
+        </LinearLayout>
+
+    </me.himanshusoni.chatmessageview.ChatMessageView>
+
+</LinearLayout>

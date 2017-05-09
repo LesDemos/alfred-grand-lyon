@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/me.himanshusoni.chatmessageview/chat-message-view/1.0.3/1.0.3.iml" filepath="$PROJECT_DIR$/me.himanshusoni.chatmessageview/chat-message-view/1.0.3/1.0.3.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Alfred.iml" filepath="$PROJECT_DIR$/Alfred.iml" />
+      <module fileurl="file://$PROJECT_DIR$/androidHorizontalListView/androidHorizontalListView.iml" filepath="$PROJECT_DIR$/androidHorizontalListView/androidHorizontalListView.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/me.himanshusoni.chatmessageview/chat-message-view/chat-message-view.iml" filepath="$PROJECT_DIR$/me.himanshusoni.chatmessageview/chat-message-view/chat-message-view.iml" />
+      <module fileurl="file://$PROJECT_DIR$/me.himanshusoni.chatmessageview/me.himanshusoni.chatmessageview.iml" filepath="$PROJECT_DIR$/me.himanshusoni.chatmessageview/me.himanshusoni.chatmessageview.iml" />
+    </modules>
+  </component>
+</project>

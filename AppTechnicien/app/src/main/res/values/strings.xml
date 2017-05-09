@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">S.O.S GrandLyon</string>
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="title_activity_intro">IntroActivity</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_maps">Mr. Jean-Paul</string>
+    <string name="title_activity_all_map">AllMap</string>
+</resources>

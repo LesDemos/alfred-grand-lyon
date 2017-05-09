@@ -1,0 +1,3 @@
+include ':app'
+include 'me.himanshusoni.chatmessageview:chat-message-view:1.0.3'
+include ':androidHorizontalListView'
